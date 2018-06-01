@@ -1,0 +1,66 @@
+{% extends 'layouts/app.html' %}
+
+{% block title %}TurboQuant{% endblock %}
+{% block meta_description %}Your AI trading strategy.{% endblock %}
+
+{% block body %}
+
+<canvas id="particler-instance"></canvas>
+<div class="maintitle row text-center lg-margin-bottom" style="margin-left: 0; background-color: #f5f5f5;">
+  <h1 class="font-bold" style="font-size: 48px; color: #2dd7ff;">Your AI Trading Strategy</h1>
+  <h3 class="text-muted">
+    Fully automatic generation of AI trading strategies 
+  </h3>
+</div>
+
+<div class="container">
+  <div class="row" style="margin-bottom: 80px;">
+    <div class="col-md-1"></div>
+    <div class="col-md-6">
+      <h3>Automatically generated AI trading strategies.</h3>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+    </div>
+    <div class="col-md-4">
+      <img src="{{ url_for('static', filename='images/tq01.png') }}"
+           class="img-responsive" style="float:right;"
+           title="Auto AI Strategies" alt="Auto AI Strategies"/>
+    </div>
+    <div class="col-md-1"></div>    
+  </div>
+  <hr style="margin-left:30px;margin-right:30px">
+  <div class="row" style="margin-bottom: 80px;">
+    <div class="col-md-1"></div>
+    <div class="col-md-4">
+      <img src="{{ url_for('static', filename='images/tq02.png') }}"
+           class="img-responsive" style="float:left;"
+           title="Hidden Patterns" alt="Hidden Patterns"/>
+    </div>
+    <div class="col-md-6">
+      <h3>Discover hidden patterns in the market.</h3>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+    </div>
+    <div class="col-md-1"></div>
+  </div>
+  <hr style="margin-left:30px;margin-right:30px">
+  <div class="row" style="margin-bottom: 80px;">
+    <div class="col-md-1"></div>
+    <div class="col-md-6">
+      <h3>Tap into cloud based AI number crunching power.</h3>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+    </div>
+    <div class="col-md-4">
+      <img src="{{ url_for('static', filename='images/tq03.png') }}"
+	   class="img-responsive" style="float:right;"
+	   title="Browser Access" alt="Browser Access"/>
+    </div>
+    <div class="col-md-1"></div>
+  </div>
+  </div> <!-- container -->
+
+<div class="row">
+  <div class="col-md-12" style="min-height: 50px;background-color: #fe6271;">
+    <h3>Keep me posted.</h3>email etc.
+  </div>
+</div>
+
+{% endblock %}
