@@ -4,6 +4,7 @@
 {% block title %}Betting history{% endblock %}
 
 {% block body %}
+<div class="container">
   <h2>Betting history</h2>
   {% if bets.total == 0 %}
     <p>No bets found.</p>
@@ -51,4 +52,5 @@
   <a href="{{ url_for('user.settings') }}" class="margin-top btn btn-primary">
     Go back to your account
   </a>
+</div> <!-- container -->
 {% endblock %}

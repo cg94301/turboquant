@@ -6,7 +6,8 @@
 {% block title %}Admin - Invoices / List{% endblock %}
 
 {% block body %}
-  {{ f.search('admin.invoices') }}
+<div class="container">
+{{ f.search('admin.invoices') }}
 
   {% if invoices.total == 0 %}
     <h3>No results found</h3>
@@ -84,5 +85,6 @@
       </tbody>
     </table>
     {{ items.paginate(invoices) }}
-  {% endif %}
+    {% endif %}
+</div>
 {% endblock %}

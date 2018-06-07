@@ -2,7 +2,7 @@
 
 {% block header %}
   <nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container">
+    <!-- <div class="container"> -->
       <div class="navbar-header p-t-10">
         <button type="button" class="navbar-toggle collapsed"
                 data-toggle="collapse" data-target="#navbar"
@@ -25,25 +25,25 @@
             {% if current_user.coins == 0 %}
             <li>
               <a href="#coming-soon">
-                <span class="label label-primary">Buy Coins</span>
+                <b>Buy Coins</b>
               </a>
             </li>
             {% else %}
             <li>
+              <a href="{{ url_for('strategy.dashboard') }}">
+                <b>Generate Strategy</b>
+              </a>
+            </li>
+            <!-- <li>
               <a href="{{ url_for('bet.place_bet') }}">
                 <span class="label label-primary">Place Bet</span>
               </a>
-            </li>
+            </li> -->            
             {% endif %}
-            <li>
-              <a href="#">
-                <span class="label label-default">Leaderboard</span>
-              </a>
-            </li>
           {% else %}
             <li>
               <a href="{{ url_for('billing.pricing') }}">
-                <span class="label label-primary">Pricing</span>
+                <b>Pricing</b>
               </a>
             </li>
           {% endif %}
@@ -59,22 +59,22 @@
               <a href="#" class="dropdown-toggle"
                  data-toggle="dropdown"
                  role="button" aria-haspopup="true"
-                 aria-expanded="false">Account
+                 aria-expanded="false"><b>Account</b>
                 <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a href="{{ url_for('user.settings') }}">Settings</a></li>
                 <li role="separator" class="divider"></li>
                 <li class="dropdown-header">Session</li>
-                <li><a href="{{ url_for('user.logout') }}">Log out</a></li>
+                <li><a href="{{ url_for('user.logout') }}">Log Out</a></li>
               </ul>
             </li>
           {% else %}
-            <li><a href="{{ url_for('user.login') }}">Log in</a></li>
-            <li><a href="{{ url_for('user.signup') }}">Sign up</a></li>
+            <li><a href="{{ url_for('user.login') }}">Log In</a></li>
+            <li><a href="{{ url_for('user.signup') }}">Sign Up</a></li>
           {% endif %}
         </ul>
       </div>
-    </div>
+    <!-- </div> -->
   </nav>
 {% endblock %}
 
