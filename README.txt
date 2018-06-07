@@ -11,3 +11,10 @@ Regular user:
 email:cg94301@gmx.com
 pwd:justdoit
 username:cg94301
+
+Colors:
+#fe6271
+254,98,113
+
+#2dd7ff
+45,215,255
