@@ -8,12 +8,13 @@
 html {
   position: relative;
   min-height: 100%;
+  background-color: #fff;
 }
 
 body {
-  padding-top: 50px;
-  padding-bottom: 20px;
-
+  /* padding-top: 20px; */
+  /* padding-bottom: 20px; */
+  margin-top: 60px;
   margin-bottom: 60px;
 }
 
@@ -25,6 +26,11 @@ body {
   border-top: 1px solid #e9e9e9;
 
   height: 60px;
+}
+
+.container {
+    padding-top: 15px;
+    padding-bottom: 15px;
 }
 
 /* Margin and padding
@@ -118,8 +124,14 @@ dd {
 }
 
 /* My Addons */
+
+a:hover {
+    color: #fe6271;
+}
+
 .turboquant {
     margin-left: 20px;
+    margin-right: 20px;
     font-family: Conthrax;
     font-size: 2em;
     color: #ffffff;
@@ -127,14 +139,21 @@ dd {
 
 .turboquant-login {
     text-align: center;
-    font-size: 2em;
+    font-size: 1.8em;
     font-family: Conthrax;
 }
 
-.turboquant-login-link {
-    color: #000000;
+.navbar-header a:hover {
+    color: #2dd7ff;
 }
 
+.turboquant-login-link {
+    color: #555;
+}
+
+.turboquant-login a:hover {
+    color: #2dd7ff;
+}
 
 .maintitle {
     padding-top: 125px;
@@ -153,11 +172,6 @@ dd {
     right: 0;
     z-index: 10;
 }
-
-a:hover {
-    color: #2dd7ff;
-}
-
 
 /* Admin dashboard
 -------------------------------------------------- */

@@ -281,6 +281,7 @@ var stripe = function (form_id) {
 
 // Placing bets.
 var bets = function () {
+    console.log('bets triggered')
   var guessSelector = '#guess';
   var wageredSelector = '#wagered';
   var recentBetsSelector = '#recent_bets';
@@ -289,7 +290,9 @@ var bets = function () {
   var $spinner = $('.spinner');
   var $form = $('#place_bet');
   
-  var placeBet = function (csrfToken) {
+    var placeBet = function (csrfToken) {
+        console.log('Triggered placeBet')
+        console.log(csrfToken)
     return $.ajax({
       type: 'POST',
       url: '/bet/place',
