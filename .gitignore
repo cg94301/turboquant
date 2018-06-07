@@ -3,3 +3,4 @@
 **.rm
 **.whl
 venv/
+celerybeat-schedule
