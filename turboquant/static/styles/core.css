@@ -104,7 +104,7 @@ a:focus {
 }
 /* Footer */
 .footer {
-  border-top: 1px solid rgba(154, 157, 160, 0.2);
+  /* border-top: 1px solid rgba(154, 157, 160, 0.2); */
   bottom: 0;
   color: #9a9da0;
   text-align: left !important;
@@ -463,12 +463,12 @@ a:focus {
 .nav-pills-custom li a {
   padding: 5px 18px;
   border-radius: 20px;
-  color: #fe6271 !important;
+  color: #00dd99 !important;
   line-height: 28px !important;
 }
 .nav-pills-custom li.active a {
   background-color: #ffffff !important;
-  color: #fe6271 !important;
+  color: #00dd99 !important;
 }
 .breadcrumb {
   background-color: transparent;
@@ -491,7 +491,7 @@ a:focus {
 }
 .dropdown-menu > li > a:focus,
 .dropdown-menu > li > a:hover {
-  background-color: #fe6271 !important;
+  background-color: #00dd99 !important;
   color: #ffffff;
 }
 .dropdown-menu > .active > a,
@@ -546,7 +546,7 @@ a:focus {
 }
 /* Text colors */
 .text-custom {
-  color: #fe6271 !important;
+  color: #00dd99 !important;
 }
 .text-white {
   color: #ffffff !important;
@@ -650,7 +650,7 @@ fieldset[disabled] .form-control {
   padding: .3em .6em .3em;
 }
 .label-default {
-  background-color: #fe6271;
+  background-color: #00dd99;
 }
 .label-primary {
   background-color: #4667cc;
@@ -683,7 +683,7 @@ fieldset[disabled] .form-control {
   padding: 3px 5px;
   font-size: 12px;
   margin-top: 1px;
-  background-color: #fe6271;
+  background-color: #00dd99;
 }
 .badge-xs {
   font-size: 9px;
@@ -760,8 +760,8 @@ fieldset[disabled] .form-control {
 .pagination > .active > span:hover,
 .pagination > .active > a:focus,
 .pagination > .active > span:focus {
-  background-color: #fe6271;
-  border-color: #fe6271;
+  background-color: #00dd99;
+  border-color: #00dd99;
 }
 .pager li > a,
 .pager li > span {
@@ -939,7 +939,7 @@ fieldset[disabled] .form-control {
   padding: 15px 25px 15px 25px;
   line-height: 22px;
   font-size: 18px;
-  background-color: #fe6271;
+  background-color: #00dd99;
   color: #ffffff;
   text-align: left;
   margin: 0px;
@@ -970,7 +970,7 @@ fieldset[disabled] .form-control {
   background-color: rgba(154, 157, 160, 0.1);
 }
 .nav-pills > .active > a > .badge {
-  color: #fe6271;
+  color: #00dd99;
 }
 .has-success .form-control {
   border-color: #3ec845;
@@ -1012,13 +1012,13 @@ fieldset[disabled] .form-control {
 }
 .popover .popover-title {
   background-color: transparent;
-  color: #fe6271;
+  color: #00dd99;
   font-weight: 500;
   font-size: 15px;
 }
 /* Code */
 code {
-  color: #fe6271;
+  color: #00dd99;
   background-color: #ffffff;
   border-radius: 4px;
 }

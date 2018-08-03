@@ -72,7 +72,7 @@
             { y: '2015', a: 93 },
             { y: '2016', a: 50 }
         ];
-        this.createBarChart('morris-bar-example', $barData, 'y', ['a'], ['Statistics'], ['#fe6271']);
+        this.createBarChart('morris-bar-example', $barData, 'y', ['a'], ['Statistics'], ['#00dd99']);
 
         //create line chart
         var $data  = [
@@ -93,7 +93,7 @@
                 {label: "In-Store Sales", value: 30},
                 {label: "Mail-Order Sales", value: 20}
             ];
-        this.createDonutChart('morris-donut-example', $donutData, ['#fe8995', "#fe6271","#ddd"]);
+        this.createDonutChart('morris-donut-example', $donutData, ['#fe8995', "#00dd99","#ddd"]);
     },
     //init
     $.Dashboard1 = new Dashboard1, $.Dashboard1.Constructor = Dashboard1

@@ -40,7 +40,7 @@ a.editable-click:hover {
   width: 100%;
 }
 .bootstrap-tagsinput .label-info {
-  background-color: #fe6271 !important;
+  background-color: #00dd99 !important;
   display: inline-block;
   padding: 5px;
   margin-bottom: 3px;
@@ -102,7 +102,7 @@ a.editable-click:hover {
 }
 .select2-results .select2-highlighted {
   color: #ffffff;
-  background-color: #fe6271;
+  background-color: #00dd99;
 }
 .select2-drop-active {
   border: 1px solid #e3e3e3 !important;
@@ -132,8 +132,8 @@ a.editable-click:hover {
   padding: 4px 7px 4px 18px;
   margin: 7px 0 3px 5px;
   color: #ffffff;
-  background: #fe6271;
-  border-color: #fe6271;
+  background: #00dd99;
+  border-color: #00dd99;
   -webkit-box-shadow: none;
   box-shadow: none;
 }
@@ -214,13 +214,13 @@ a.editable-click:hover {
 .datepicker table tr td span.active:hover[disabled],
 .datepicker table tr td span.active.disabled[disabled],
 .datepicker table tr td span.active.disabled:hover[disabled] {
-  background-color: #fe6271;
+  background-color: #00dd99;
 }
 .datepicker table tr td.active,
 .datepicker table tr td.active:hover,
 .datepicker table tr td.active.disabled,
 .datepicker table tr td.active.disabled:hover {
-  background-color: #fe6271 !important;
+  background-color: #00dd99 !important;
   background-image: none;
   box-shadow: none;
   text-shadow: none;
@@ -345,10 +345,10 @@ a.editable-click:hover {
   width: 100%;
 }
 .jFiler-theme-default .jFiler-input-button {
-  background-color: #fe6271;
+  background-color: #00dd99;
   background-image: none !important;
   color: #ffffff;
-  border: 1px solid #fe6271 !important;
+  border: 1px solid #00dd99 !important;
 }
 .jFiler-input-text h3 {
   font-family: 'Karla', sans-serif;
@@ -365,7 +365,7 @@ a.editable-click:hover {
   opacity: 0.9;
 }
 .toast {
-  background-color: #fe6271;
+  background-color: #00dd99;
 }
 .toast-success {
   background-color: rgba(62, 200, 69, 0.8);
@@ -528,7 +528,7 @@ a.editable-click:hover {
 .ct-chart .ct-series.ct-series-a .ct-line,
 .ct-chart .ct-series.ct-series-a .ct-point,
 .ct-chart .ct-series.ct-series-a .ct-slice-donut {
-  stroke: #fe6271;
+  stroke: #00dd99;
 }
 .ct-chart .ct-series.ct-series-b .ct-bar,
 .ct-chart .ct-series.ct-series-b .ct-line,
@@ -568,7 +568,7 @@ a.editable-click:hover {
 }
 .ct-series-a .ct-area,
 .ct-series-a .ct-slice-pie {
-  fill: #fe6271;
+  fill: #00dd99;
 }
 .ct-series-b .ct-area,
 .ct-series-b .ct-slice-pie {
@@ -631,7 +631,7 @@ a.editable-click:hover {
   color: #ffffff;
   font-size: 16px;
   line-height: 40px;
-  background: #fe6271;
+  background: #00dd99;
   border-radius: 4px;
   padding: 10px 20px;
 }
@@ -646,13 +646,13 @@ a.editable-click:hover {
   bottom: -15px;
   border-left: 16px solid transparent;
   border-right: 16px solid transparent;
-  border-top: 16px solid #fe6271;
+  border-top: 16px solid #00dd99;
 }
 .gmaps-overlay_arrow.below {
   top: -15px;
   border-left: 16px solid transparent;
   border-right: 16px solid transparent;
-  border-bottom: 16px solid #fe6271;
+  border-bottom: 16px solid #00dd99;
 }
 .jvectormap-zoomin,
 .jvectormap-zoomout {
@@ -682,7 +682,7 @@ a.editable-click:hover {
   line-height: 46px;
 }
 .logo-alt-box .logo span span {
-  color: #fe6271;
+  color: #00dd99;
 }
 .logo-alt-box h5 {
   font-size: 12px;
@@ -697,7 +697,7 @@ a.editable-click:hover {
   width: 88px;
 }
 .ex-page-content .text-error {
-  color: #fe6271;
+  color: #00dd99;
   text-shadow: rgba(254, 98, 113, 0.3) 5px 1px;
   font-size: 98px;
   font-weight: 700;

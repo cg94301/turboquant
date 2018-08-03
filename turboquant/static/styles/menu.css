@@ -40,7 +40,7 @@ File: Menu
   display: none;
 }
 .navbar-default {
-    background-color: #333; /* #2dd7ff;  #fe6271; */
+    background-color: #333; /* #2dd7ff;  #00dd99; */
   border-radius: 0;
   box-shadow: 0px 8px 42px 0px rgba(0, 0, 0, 0.08);
   border: none;
@@ -266,7 +266,7 @@ div.fixed-left .side-menu.left {
   margin: 3px 0 0 0;
 }
 #sidebar-menu > ul > li > a.active {
-    color: #fe6271 !important;
+    color: #00dd99 !important;
     /* color: rgba(45, 215, 255, 1) !important; */
 }
 .menu-title {
@@ -333,7 +333,7 @@ div.fixed-left .side-menu.left {
   z-index: 6;
 }
 #wrapper.enlarged .left.side-menu #sidebar-menu ul > li:hover > ul a:hover {
-  color: #fe6271;
+  color: #00dd99;
 }
 #wrapper.enlarged .left.side-menu #sidebar-menu ul > li:hover a span {
   display: inline;
@@ -357,10 +357,10 @@ div.fixed-left .side-menu.left {
   transform: rotate(270deg);
 }
 #wrapper.enlarged .left.side-menu #sidebar-menu ul ul li.active a {
-  color: #fe6271;
+  color: #00dd99;
 }
 #wrapper.enlarged .left.side-menu #sidebar-menu ul ul a:hover {
-  color: #fe6271 !important;
+  color: #00dd99 !important;
 }
 #wrapper.enlarged .left.side-menu #sidebar-menu ul > li > a span {
   display: none;
