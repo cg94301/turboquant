@@ -1,8 +1,30 @@
 from sqlalchemy import func
 
-from turboquant.blueprints.user.models import db, User
+from turboquant.blueprints.user.models import User
 from turboquant.blueprints.billing.models.subscription import Subscription
 from turboquant.blueprints.bet.models.bet import Bet
+
+import datetime
+
+from lib.util_datetime import timedelta_months
+from lib.util_sqlalchemy import ResourceMixin
+from turboquant.extensions import db
+
+class Strategy(ResourceMixin, db.Model):
+    __tablename__ = 'strategies'
+    id = db.Column(db.Integer, primary_key=True)
+
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id',
+                                                  onupdate='CASCADE',
+                                                  ondelete='CASCADE'),
+                        index=True, nullable=False)
+    
+    name = db.Column(db.String(128))
+    execution_arn = db.Column(db.String(128))
+
+    def __init__(self, **kwargs):
+        # CAll Flask-SQLAlchemy's constructor.
+        super(Strategy, self).__init__(**kwargs)
 
 
 class Dashboard(object):

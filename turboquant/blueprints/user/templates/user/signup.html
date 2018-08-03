@@ -4,8 +4,9 @@
 {% block title %}Sign up for a new account{% endblock %}
 
 {% block body %}
+<div class="container">
   <div class="row">
-    <div class="col-md-5">
+    <!-- <div class="col-md-5">
       <h2>What are you waiting for?</h2>
 
       <div class="media md-margin-bottom">
@@ -39,10 +40,10 @@
           <span class="text-muted">Compare your results to others.</span>
         </div>
       </div>
-    </div>
-    <div class="col-md-5 col-md-push-1 col-md-offset-1 well">
+    </div> -->
+    <div class="col-md-5 col-md-push-1 col-md-offset-2 well">
       {% call f.form_tag('user.signup') %}
-        <legend>Sign up today</legend>
+        <legend>Sign Up</legend>
 
         {% call f.form_group(form.email, css_class='sm-margin-bottom',
                              autofocus='autofocus',
@@ -69,4 +70,5 @@
       {% endcall %}
     </div>
   </div>
+</div>
 {% endblock %}

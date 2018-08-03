@@ -46,15 +46,20 @@ def configuration():
     print "configuration:",request.form.get('max-depth')
     print "configuration:",request.form.get('eta')    
 
+    print "current_user:",current_user.id
     # Pre-populate the email field if the user is signed in.
-    form = XGBForm(obj=current_user)
+    #form = XGBForm(obj=current_user)
+    form = XGBForm()
 
     if form.validate_on_submit():
         # This prevents circular imports.
-        from turboquant.blueprints.contact.tasks import deliver_contact_email
+        from turboquant.blueprints.strategy.tasks import launch_xgb_job, launch_sfn_job
 
-        deliver_contact_email.delay(request.form.get('num-round'),
-                                    request.form.get('max-depth'))
+        # launch_xgb_job(request.form.get('num-round'),
+        task = launch_sfn_job.delay(current_user.id,
+                                    request.form.get('num-round'),
+                                    request.form.get('max-depth'),
+                                    request.form.get('eta'))
 
         flash('Thanks, expect a response shortly.', 'success')
         return redirect(url_for('strategy.configuration'))
