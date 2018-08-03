@@ -34,3 +34,6 @@ flask-debugtoolbar==0.10.0
 Flask-Mail==0.9.1
 Flask-Login==0.3.2
 Flask-Limiter==0.9.3
+
+# AWS SDK
+boto3==1.7.34

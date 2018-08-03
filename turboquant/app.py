@@ -35,6 +35,7 @@ CELERY_TASK_LIST = [
     'turboquant.blueprints.contact.tasks',
     'turboquant.blueprints.user.tasks',
     'turboquant.blueprints.billing.tasks',
+    'turboquant.blueprints.strategy.tasks',
 ]
 
 
