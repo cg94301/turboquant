@@ -509,7 +509,7 @@ a:focus {
 }
 /* Background colors */
 .bg-custom {
-  background-color: rgba(254, 98, 113, 0.75) !important;
+  background-color: rgba(0, 221, 153, 0.75) !important; /* rgba(254, 98, 113, 0.75) */
 }
 .bg-primary {
   background-color: rgba(70, 103, 204, 0.75) !important;
@@ -1179,7 +1179,7 @@ pre {
   background-color: rgba(255, 255, 255, 0.4);
 }
 .waves-effect.waves-custom .waves-ripple {
-  background-color: rgba(254, 98, 113, 0.4);
+  background-color: rgba(0, 221, 153, 0.4); /* rgba(254, 98, 113, 0.4 */
 }
 .waves-effect.waves-primary .waves-ripple {
   background-color: rgba(70, 103, 204, 0.4);

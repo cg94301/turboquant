@@ -43,7 +43,7 @@
     </div> -->
     <div class="col-md-5 col-md-push-1 col-md-offset-2 well">
       {% call f.form_tag('user.signup') %}
-        <legend>Sign Up</legend>
+        <!-- <legend>Sign Up</legend> -->
 
         {% call f.form_group(form.email, css_class='sm-margin-bottom',
                              autofocus='autofocus',
@@ -55,15 +55,15 @@
 
         <div class="row">
           <div class="col-md-6">
-            <button type="submit" class="btn btn-primary btn-block">
-              Register
+            <button type="submit" class="btn btn-success btn-block">
+              Sign Up
             </button>
           </div>
           <div class="col-md-6">
             <div class="visible-xs visible-sm sm-margin-top"></div>
             <a href="{{ url_for('user.login') }}"
                class="btn btn-default btn-block">
-              Looking to sign in?
+              Sign In
             </a>
           </div>
         </div>

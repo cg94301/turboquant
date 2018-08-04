@@ -74,6 +74,6 @@ def history(page):
     paginated_bets = Bet.query \
         .filter(Bet.user_id == current_user.id) \
         .order_by(Bet.created_on.desc()) \
-        .paginate(page, 50, True)
+        .paginate(page, 20, True)
 
     return render_template('bet/history.html', bets=paginated_bets)

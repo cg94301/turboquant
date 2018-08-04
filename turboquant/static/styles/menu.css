@@ -197,7 +197,7 @@ div.fixed-left .side-menu.left {
   text-align: center;
 }
 #sidebar-menu .waves-effect .waves-ripple {
-  background-color: rgba(254, 98, 113, 0.45);
+  background-color: rgba(0, 221, 153, 0.45); /* rgba(254, 98, 113, 0.45) */
 }
 #sidebar-menu .nav > li > a .badge {
   position: absolute;

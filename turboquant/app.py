@@ -10,7 +10,7 @@ from celery import Celery
 from itsdangerous import URLSafeTimedSerializer
 
 from turboquant.blueprints.admin import admin
-from turboquant.blueprints.strategy import strategy
+from turboquant.blueprints.quant import quant
 from turboquant.blueprints.page import page
 from turboquant.blueprints.contact import contact
 from turboquant.blueprints.user import user
@@ -35,7 +35,7 @@ CELERY_TASK_LIST = [
     'turboquant.blueprints.contact.tasks',
     'turboquant.blueprints.user.tasks',
     'turboquant.blueprints.billing.tasks',
-    'turboquant.blueprints.strategy.tasks',
+    'turboquant.blueprints.quant.tasks',
 ]
 
 
@@ -87,7 +87,7 @@ def create_app(settings_override=None):
     error_templates(app)
     exception_handler(app)
     app.register_blueprint(admin)
-    app.register_blueprint(strategy)
+    app.register_blueprint(quant)
     app.register_blueprint(page)
     app.register_blueprint(contact)
     app.register_blueprint(user)
