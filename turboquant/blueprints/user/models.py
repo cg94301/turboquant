@@ -17,6 +17,7 @@ from turboquant.blueprints.billing.models.credit_card import CreditCard
 from turboquant.blueprints.billing.models.subscription import Subscription
 from turboquant.blueprints.billing.models.invoice import Invoice
 from turboquant.blueprints.bet.models.bet import Bet
+from turboquant.blueprints.quant.models import Strategy
 from turboquant.extensions import db
 
 
@@ -37,6 +38,8 @@ class User(UserMixin, ResourceMixin, db.Model):
     invoices = db.relationship(Invoice, backref='users', passive_deletes=True)
     bets = db.relationship(Bet, backref='bets', passive_deletes=True)
 
+    strategies = db.relationship(Strategy, backref='strategies', passive_deletes=True)
+    
     # Authentication.
     role = db.Column(db.Enum(*ROLE, name='role_types', native_enum=False),
                      index=True, nullable=False, server_default='member')

@@ -9,7 +9,7 @@ from flask_login import login_required, current_user
 from sqlalchemy import text
 
 from turboquant.blueprints.quant.forms import XGBForm
-from turboquant.blueprints.quant.models import Dashboard, Strategy
+from turboquant.blueprints.quant.models import Strategy
 
 
 quant = Blueprint('quant', __name__,
@@ -26,21 +26,11 @@ def before_request():
 # Dashboard -------------------------------------------------------------------
 @quant.route('/dashboard/')
 def dashboard():
-    group_and_count_plans = Dashboard.group_and_count_plans()
-    group_and_count_coupons = Dashboard.group_and_count_coupons()
-    group_and_count_users = Dashboard.group_and_count_users()
-    group_and_count_payouts = Dashboard.group_and_count_payouts()
-
-    return render_template('quant/page/dashboard.html',
-                           group_and_count_plans=group_and_count_plans,
-                           group_and_count_coupons=group_and_count_coupons,
-                           group_and_count_users=group_and_count_users,
-                           group_and_count_payouts=group_and_count_payouts)
+    return render_template('quant/page/dashboard.html')
 
 
 @quant.route('/data/')
 def data():
-
     return render_template('quant/page/data.html')
 
 
