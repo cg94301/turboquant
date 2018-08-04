@@ -15,7 +15,10 @@
 
         {% call f.form_group(form.password, css_class='sm-margin-bottom') %}
         {% endcall %}
-
+        
+        <a href="{{ url_for('page.privacy') }}">Privacy Policy</a>
+        <a href="{{ url_for('page.terms') }}">Terms of Service</a>
+  
         <div class="row">
           <div class="col-md-6">
             <button type="submit" class="btn btn-warning btn-block">

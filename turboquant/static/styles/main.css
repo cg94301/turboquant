@@ -163,10 +163,10 @@ a:hover {
 
 #particler-instance {
     padding: 0;
-    margin: auto;
+    margin: 0; /* auto */
     display: flex;
     position: absolute;
-    width: 1200px;
+    width: 100%; /* 1200px; */
     height: 400px;
     top: 40px;
     left: 0;
