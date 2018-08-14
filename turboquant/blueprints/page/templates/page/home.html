@@ -85,29 +85,30 @@
 </div>
 
 <div class="row" style="margin-bottom: 10px;margin-top: 80px;">
-  <div class="col-md-2"></div>
-  <div class="col-md-4">
-    <h4 class="turboquant" style="color: #444;margin-left: 0px;">turboquant</h4> <!-- dark #333; custom #2dd7ff -->
+  <div class="col-md-1"></div>
+  <div class="col-md-5">
+    <h4 class="turboquant" style="color: #444;margin-left: 0px; margin-right: 5px; display: inline;">turboquant</h4> <!-- dark #333; custom #2dd7ff -->
+    <span style="color: #fbca35;"><b>beta</b></span>
   </div>
-  <div class="col-md-6" style="margin-top: 18px;">
+  <div class="col-md-5" style="margin-top: 10px;">
     <table class="menu">
       <tbody>
         <tr>
           <td><a href="{{ url_for('page.privacy') }}"><b>Pricing</b></a></td>
           <td><a href="{{ url_for('page.privacy') }}"><b>FAQ</b></a></td>
-          <td><a href="{{ url_for('page.privacy') }}"><b>About</b></a></td>
+          <td><b>About</b></td>
           <td><b>Legal</b></td>          
         </tr>
         <tr>
           <td></td>
           <td></td>
-          <td></td>          
+          <td style="font-size: smaller"><a href="{{ url_for('page.terms') }}">Vision</a></td>          
           <td style="font-size: smaller"><a href="{{ url_for('page.terms') }}">Terms of Service</a></td>
         </tr>
         <tr>
           <td></td>
           <td></td>
-          <td></td>          
+          <td style="font-size: smaller"><a href="{{ url_for('page.terms') }}">Team</a></td>          
           <td style="font-size: smaller"><a href="{{ url_for('page.privacy') }}">Privacy Policy</a></td>
         </tr>
       </tbody>
