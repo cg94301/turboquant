@@ -70,10 +70,16 @@
 
     <footer class="footer text-center">
       <div class="container">
-        <ul class="list-inline">
-          <li class="text-muted">turboquant &copy; {{ current_year() }}</li>
-          {% block footer %}{% endblock %}
-        </ul>
+        <div class="row">
+          <div class="col-md-8">
+          </div>
+          <div class="col-md-2">
+            <ul class="list-inline">
+              {% block footer %}{% endblock %}
+              <li class="text-muted">turboquant &copy; {{ current_year() }}</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </footer>
 
