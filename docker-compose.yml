@@ -26,6 +26,7 @@ services:
       - '.env'
     volumes:
       - '.:/turboquant'
+      - '/home/chrisg/.aws:/root/.aws'
     ports:
       - '8000:8000'
 

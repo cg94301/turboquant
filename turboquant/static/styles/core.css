@@ -668,7 +668,10 @@ fieldset[disabled] .form-control {
   background-color: #e96154;
 }
 .label-purple {
-  background-color: #aa81f3;
+    background-color: #aa81f3;
+}
+.label-orange {
+    background-color: #ff9900;
 }
 .label-pink {
   background-color: #ff8acc;

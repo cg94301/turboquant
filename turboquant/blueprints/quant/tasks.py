@@ -104,3 +104,27 @@ def launch_sfn_job(id, num_round, max_depth, eta):
     s.save()
     
     return None
+
+@celery.task()
+def describe_jobs(id):
+
+    # Get all strategy arns
+    strategies_arn = Strategy.query\
+           .filter(Strategy.user_id == id)
+
+    arns = [arn.execution_arn for arn in strategies_arn]
+    print "*** debug", arns
+    payload = json.dumps(arns)
+    print "*** debug:%s" % payload
+    print "*** debug", type(payload)
+    payloadb = str.encode(payload)
+
+    # why is region not found from .aws ??
+    client = boto3.client('lambda', region_name='us-west-2')
+    #client = boto3.client('lambda')
+    response = client.invoke(
+        FunctionName='arn:aws:lambda:us-west-2:188444798703:function:describe_execution',
+        Payload=payloadb,
+    )
+
+    print "*** debug", response    

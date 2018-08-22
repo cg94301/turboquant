@@ -36,6 +36,12 @@
       <div class="content">
 	<div class="container">
 
+          <!-- <div class="row">
+            <div class="col-sm-12">
+              <h4 class="page-title">Strategies</h4>
+            </div>
+          </div> -->          
+          
 	  <!-- Page-Title -->
           <!-- <div class="row">
             <div class="col-sm-12">
@@ -53,14 +59,29 @@
             </div>
           </div> -->
           <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-8">
               <div class="card-box table-responsive">
 
-                <a href="{{ url_for('quant.strategies') }}">
+                <!-- <a href="{{ url_for('quant.strategies') }}">
                   <button type="button" class="btn btn-danger waves-effect w-md waves-light m-b-5">Retrieve Strategies</button>
-                </a>
+                </a> -->
+                <!-- <h5 class="header-title m-t-0 m-b-30"> Retrieve strategies from cloud</h5> -->
+                <form action="{{ url_for('quant.strategies') }}" method="post">
+                   {{ form.hidden_tag() }}
+                   <button type="submit" name="update" class="btn btn-custom waves-effect w-md waves-light m-b-5">Update</button>
+                </form>
               </div>
             </div>
+            <div class="col-sm-4">
+              <div class="card-box table-responsive">
+                <!-- <h5 class="header-title m-t-0 m-b-30">Terminate cloud jobs</h5> -->
+                <form action="{{ url_for('quant.strategies') }}" method="post">
+                   {{ form.hidden_tag() }}
+                   <button type="submit" name="terminate" class="btn btn-danger waves-effect w-md waves-light m-b-5">Terminate</button>
+                </form>
+                
+              </div>
+            </div>            
           </div>
           <div class="row">
             <div class="col-sm-12">
@@ -78,15 +99,16 @@
                   </ul>
                 </div> -->
 
-                <h4 class="header-title m-t-0 m-b-30">Default Example</h4>
+                <!-- <h4 class="header-title m-t-0 m-b-30">Strategies</h4> -->
 
                 <table id="datatable" class="table table-striped dt-responsive nowrap">
                   <thead>
                     <tr>
                       <!-- <th>created_on</th> -->
                       <!-- <th>id</th> -->
-                      <th>name</th>
+                      <th>strategy</th>
                       <th>status</th>
+                      <th>auc</th>
                     </tr>
                   </thead>
 
@@ -113,16 +135,17 @@
                         {% elif strategy.status == 'SUCCEEDED' %}
                         <span class="label label-success"> {{ strategy.status }} </span>
                         {% elif strategy.status == 'FAILED' %}
-                        <span class="label label-danger"> {{ strategy.status }} </span>
+                        <span class="label label-pink"> {{ strategy.status }} </span>
                         {% elif strategy.status == 'TIMED_OUT' %}
                         <span class="label label-pink"> {{ strategy.status }} </span>
                         {% elif strategy.status == 'ABORTED' %}
-                        <span class="label label-warning"> {{ strategy.status }} </span>
-                        {% elif strategy.status == 'RUNNING' %}
-                        <span class="label label-info"> {{ strategy.status }} </span>                         
+                        <span class="label label-pink"> {{ strategy.status }} </span>
                         {% else %}
                         <span class="label label-inverse"> {{ strategy.status }} </span>
                         {% endif %}
+                      </td>
+                      <td>
+                        {{ strategy.auc }}
                       </td>
                     </tr>
                     {% endfor %}

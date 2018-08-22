@@ -53,3 +53,29 @@ Colors:
 
 orignal light-red #fe6271 replaced by greenish #00dd99
 orignal faded light-red #fe8995
+
+
+**************
+
+https://stackoverflow.com/questions/9667138/how-to-update-sqlalchemy-row-entry#26920108
+
+user=User.query.filter_by(username=form.username.data).first()
+
+There are several ways to UPDATE using sqlalchemy
+
+1) user.no_of_logins += 1
+   session.commit()
+
+2) session.query().\
+       filter(User.username == form.username.data).\
+       update({"no_of_logins": (User.no_of_logins +1)})
+   session.commit()
+
+3) conn = engine.connect()
+   stmt = User.update().\
+       values(no_of_logins=(User.no_of_logins + 1)).\
+       where(User.username == form.username.data)
+   conn.execute(stmt)
+
+4) setattr(user, 'no_of_logins', user.no_of_logins+1)
+   session.commit()

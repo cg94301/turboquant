@@ -79,13 +79,13 @@
   
 </div> <!-- container -->
 
-<div class="row" style="min-height: 50px;background-color: #fbca35;">
-  <div class="col-md-3" style="margin-left: 60px;margin-top: 15px"><h3 style="color: #00dd99">Keep me posted!</h3></div> <!-- success #3ec845,primary #4667cc -->
+<div class="row" style="background-color: #fbca35;">
+  <div class="col-md-3" style="margin-top: 15px"><h3 style="margin-left: 80px;color: #00dd99">Keep me posted!</h3></div> <!-- success #3ec845,primary #4667cc -->
   <div class="col-md-6"> <!-- #fe6271 -->
     {% call f.form_tag('page.home') %}
       {% call f.form_group(form.email, css_class='sm-margin-bottom',
         autofocus='autofocus',
-        placeholder='Please enter your email address') %}
+        placeholder='Enter your email address to receive updates') %}
       {% endcall %}
     {% endcall %}
   </div>
@@ -96,7 +96,7 @@
   </div>
 </div>
 
-<div class="row" style="margin-bottom: 10px;margin-top: 140px;">
+<div class="row" style="margin-bottom: 10px;margin-top: 140px;background-color: #f5f5f5; padding-top: 20px; padding-bottom: 40px">
   <div class="col-md-1"></div>
   <div class="col-md-6">
     <h4 class="turboquant" style="color: #444;margin-left: 0px; margin-right: 5px; display: inline;">turboquant</h4> <!-- dark #333; custom #2dd7ff -->
@@ -114,15 +114,20 @@
         <tr>
           <td></td>
           <td></td>
-          <td style="font-size: smaller"><a href="{{ url_for('page.terms') }}">Vision</a></td>          
-          <td style="font-size: smaller"><a href="{{ url_for('page.terms') }}">Terms of Service</a></td>
+          <td><a href="{{ url_for('page.terms') }}">Vision</a></td>          
+          <td><a href="{{ url_for('page.terms') }}">Terms of Service</a></td>
         </tr>
         <tr>
           <td></td>
           <td></td>
-          <td style="font-size: smaller"><a href="{{ url_for('page.terms') }}">Team</a></td>          
-          <td style="font-size: smaller"><a href="{{ url_for('page.privacy') }}">Privacy Policy</a></td>
+          <td><a href="{{ url_for('page.terms') }}">Team</a></td>          
+          <td><a href="{{ url_for('page.privacy') }}">Privacy Policy</a></td>
         </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td><a href="{{ url_for('page.privacy') }}">Contact</a></td> <!-- pop up email to info@turboquant.com -->
+          <td></td>
       </tbody>
     </table>
   </div>
