@@ -135,9 +135,9 @@
                         {% elif strategy.status == 'SUCCEEDED' %}
                         <span class="label label-success"> {{ strategy.status }} </span>
                         {% elif strategy.status == 'FAILED' %}
-                        <span class="label label-pink"> {{ strategy.status }} </span>
+                        <span class="label label-danger"> {{ strategy.status }} </span>
                         {% elif strategy.status == 'TIMED_OUT' %}
-                        <span class="label label-pink"> {{ strategy.status }} </span>
+                        <span class="label label-danger"> {{ strategy.status }} </span>
                         {% elif strategy.status == 'ABORTED' %}
                         <span class="label label-pink"> {{ strategy.status }} </span>
                         {% else %}
