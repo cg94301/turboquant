@@ -45,7 +45,7 @@ def launch_xgb_job(id, num_round, max_depth, eta):
     return {}
 
 @celery.task()
-def launch_sfn_job(id, num_round, max_depth, eta):
+def launch_sfn_job(id, ticker, num_round, max_depth, eta):
     """
     Send a contact e-mail.
 
@@ -71,7 +71,7 @@ def launch_sfn_job(id, num_round, max_depth, eta):
     wait_time = 20
 
     client = boto3.client('stepfunctions')
-    params = {'id':id, 'num_round': num_round,'max_depth': max_depth, 'eta': eta, 'wait_time': wait_time}
+    params = {'id':name, 'ticker':ticker, 'num_round': num_round,'max_depth': max_depth, 'eta': eta, 'wait_time': wait_time}
     payload = json.dumps(params)
     payloadb = str.encode(payload)
 

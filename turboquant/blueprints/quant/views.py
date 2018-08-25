@@ -57,6 +57,7 @@ def generate():
 
         # launch_xgb_job(request.form.get('num-round'),
         task = launch_sfn_job.delay(current_user.id,
+                                    'AAPL',
                                     request.form.get('num-round'),
                                     request.form.get('max-depth'),
                                     request.form.get('eta'))
