@@ -57,7 +57,7 @@ def generate():
 
         # launch_xgb_job(request.form.get('num-round'),
         task = launch_sfn_job.delay(current_user.id,
-                                    'AAPL',
+                                    'SBUX',
                                     request.form.get('num-round'),
                                     request.form.get('max-depth'),
                                     request.form.get('eta'))
@@ -141,6 +141,10 @@ def strategies(page):
                 print "***debug:", auc_out
                 q.auc = auc_out
 
+                precision_out = outputd['statistics']['precision']
+                recall_out = outputd['statistics']['recall']
+                q.precision = precision_out
+                q.recall = recall_out
                 #q = db.session.query().\
                     #   filter(Strategy.name == name_out).\
                     #   update({"status": status_out})

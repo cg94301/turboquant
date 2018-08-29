@@ -23,6 +23,8 @@ class Strategy(ResourceMixin, db.Model):
     execution_arn = db.Column(db.String(128))
     status = db.Column(db.String(32))
     auc = db.Column(db.Float(32))
+    precision = db.Column(db.Float(32))
+    recall = db.Column(db.Float(32))
 
     def __init__(self, **kwargs):
         # CAll Flask-SQLAlchemy's constructor.

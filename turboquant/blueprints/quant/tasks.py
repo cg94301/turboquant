@@ -60,6 +60,7 @@ def launch_sfn_job(id, ticker, num_round, max_depth, eta):
     print "max_depth:",max_depth
     print "eta:",eta
 
+
     #seed = randint(0, 4294967295)
     #code = ''.join(random.choice('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz') for i in range(8))
     #code = ''.join(random.choice('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ') for i in range(8))
@@ -68,17 +69,19 @@ def launch_sfn_job(id, ticker, num_round, max_depth, eta):
     
     print "name:",name
 
+    seed = None
     wait_time = 20
-
+    print "seed:",seed
+    
     client = boto3.client('stepfunctions')
-    params = {'id':name, 'ticker':ticker, 'num_round': num_round,'max_depth': max_depth, 'eta': eta, 'wait_time': wait_time}
+    params = {'id':name, 'ticker':ticker, 'num_round': num_round,'max_depth': max_depth, 'eta': eta, 'wait_time': wait_time, 'seed': seed}
     payload = json.dumps(params)
     payloadb = str.encode(payload)
 
     # InvocationType 'Event' -> asynchronous
     # InvocationType 'DryRun' -> test w/o actually calling the function
     response = client.start_execution(
-        stateMachineArn='arn:aws:states:us-west-2:188444798703:stateMachine:tqml5',
+        stateMachineArn='arn:aws:states:us-west-2:188444798703:stateMachine:tqml6',
         input=payloadb,
         name=name
     )

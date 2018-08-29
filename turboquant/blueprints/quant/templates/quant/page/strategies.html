@@ -109,6 +109,8 @@
                       <th>strategy</th>
                       <th>status</th>
                       <th>auc</th>
+                      <th>precision</th>
+                      <th>recall</th>
                     </tr>
                   </thead>
 
@@ -146,6 +148,12 @@
                       </td>
                       <td>
                         {{ strategy.auc }}
+                      </td>
+                      <td>
+                        {{ strategy.precision }}
+                      </td>
+                      <td>
+                        {{ strategy.recall }}
                       </td>
                     </tr>
                     {% endfor %}
