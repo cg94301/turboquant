@@ -101,6 +101,7 @@ def launch_sfn_job(id, ticker, num_round, max_depth, eta):
     s = Strategy()
     s.user_id = id
     s.name = name
+    s.ticker = ticker
     #s.startdate = response['startDate']
     s.execution_arn = response['executionArn']
     s.status = 'PENDING'

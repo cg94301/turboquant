@@ -20,6 +20,7 @@ class Strategy(ResourceMixin, db.Model):
                         index=True, nullable=False)
     
     name = db.Column(db.String(128))
+    ticker = db.Column(db.String(128))
     execution_arn = db.Column(db.String(128))
     status = db.Column(db.String(32))
     auc = db.Column(db.Float(32))
