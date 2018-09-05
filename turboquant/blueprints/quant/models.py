@@ -26,6 +26,7 @@ class Strategy(ResourceMixin, db.Model):
     auc = db.Column(db.Float(32))
     precision = db.Column(db.Float(32))
     recall = db.Column(db.Float(32))
+    sharpe = db.Column(db.Float(32))
 
     def __init__(self, **kwargs):
         # CAll Flask-SQLAlchemy's constructor.

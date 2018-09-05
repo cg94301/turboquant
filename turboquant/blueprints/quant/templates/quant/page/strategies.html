@@ -112,6 +112,7 @@
                       <th>auc</th>
                       <th>precision</th>
                       <th>recall</th>
+                      <th>sharpe</th>
                     </tr>
                   </thead>
 
@@ -158,6 +159,9 @@
                       </td>
                       <td>
                         {{ strategy.recall }}
+                      </td>
+                      <td>
+                        {{ strategy.sharpe }}
                       </td>
                     </tr>
                     {% endfor %}

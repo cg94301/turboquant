@@ -13,11 +13,40 @@ from turboquant.blueprints.quant.models import Strategy
 from turboquant.extensions import db
 from flask_wtf import Form
 
+from werkzeug.utils import secure_filename
 import boto3,json
 
 quant = Blueprint('quant', __name__,
                   template_folder='templates', url_prefix='/quant')
 
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+S3_BUCKET = 'cgiam.sagemaker'
+
+s3 = boto3.client("s3")
+
+def upload_file_to_s3(file, bucket_name, uid, acl="public-read"):
+
+    try:
+        s3.upload_fileobj(
+            file,
+            bucket_name,
+            'u' + str(uid) + '/' + file.filename,
+            ExtraArgs={
+                "ACL": acl,
+                "ContentType": file.content_type
+            }
+        )
+
+    except Exception as e:
+        print("Something Happend: ", e)
+        return e
+
+    return "{}".format(file.filename)
 
 @quant.before_request
 @login_required
@@ -32,9 +61,40 @@ def dashboard():
     return render_template('quant/page/dashboard.html')
 
 
-@quant.route('/data/')
+@quant.route('/data/', methods=['GET','POST'])
 def data():
-    return render_template('quant/page/data.html')
+    
+    # Use basic form for CSRF token
+    form = Form()
+
+    if request.method == 'POST':
+        
+        for uf in request.files.getlist('user_file'):
+            print uf
+
+            file = uf
+
+            """
+            These attributes are also available
+
+            file.filename
+            file.content_type
+            file.content_length
+            file.mimetype
+            """
+
+            if file.filename == "":
+                return "Please select a file"
+
+            if file and allowed_file(file.filename):
+                file.filename = secure_filename(file.filename)
+                output = upload_file_to_s3(file, S3_BUCKET, current_user.id)
+                #return str(output)
+
+            else:
+                return redirect("quant/page/data.html", form=form)
+        
+    return render_template('quant/page/data.html', form=form)
 
 
 @quant.route('/generate/', methods=['GET','POST'])
@@ -57,7 +117,7 @@ def generate():
 
         # launch_xgb_job(request.form.get('num-round'),
         task = launch_sfn_job.delay(current_user.id,
-                                    'AAPL',
+                                    'SBUX',
                                     request.form.get('num-round'),
                                     request.form.get('max-depth'),
                                     request.form.get('eta'))
@@ -145,6 +205,9 @@ def strategies(page):
                 recall_out = outputd['statistics']['recall']
                 q.precision = precision_out
                 q.recall = recall_out
+
+                sharpe_out = outputd['finstats']['sharpe']
+                q.sharpe = sharpe_out
                 #q = db.session.query().\
                     #   filter(Strategy.name == name_out).\
                     #   update({"status": status_out})
