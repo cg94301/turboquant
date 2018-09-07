@@ -19,7 +19,7 @@ import boto3,json
 quant = Blueprint('quant', __name__,
                   template_folder='templates', url_prefix='/quant')
 
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+ALLOWED_EXTENSIONS = set(['csv'])
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -88,7 +88,7 @@ def data():
 
             if file and allowed_file(file.filename):
                 file.filename = secure_filename(file.filename)
-                output = upload_file_to_s3(file, S3_BUCKET, current_user.id)
+                output = upload_file_to_s3(file, S3_BUCKET, str(current_user.id) + '/ticker')
                 #return str(output)
 
             else:

@@ -74,7 +74,7 @@ def launch_sfn_job(id, ticker, num_round, max_depth, eta):
     print "seed:",seed
     
     client = boto3.client('stepfunctions')
-    params = {'id':name, 'ticker':ticker, 'num_round': num_round,'max_depth': max_depth, 'eta': eta, 'wait_time': wait_time, 'seed': seed}
+    params = {'uid': id, 'id':name, 'ticker':ticker, 'num_round': num_round,'max_depth': max_depth, 'eta': eta, 'wait_time': wait_time, 'seed': seed}
     payload = json.dumps(params)
     payloadb = str.encode(payload)
 
