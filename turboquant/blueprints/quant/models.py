@@ -32,7 +32,25 @@ class Strategy(ResourceMixin, db.Model):
         # CAll Flask-SQLAlchemy's constructor.
         super(Strategy, self).__init__(**kwargs)
 
+        
+class Ticker(ResourceMixin, db.Model):
+    __tablename__ = 'tickers'
+    id = db.Column(db.Integer, primary_key=True)
 
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id',
+                                                  onupdate='CASCADE',
+                                                  ondelete='CASCADE'),
+                        index=True, nullable=False)
+    
+    tid = db.Column(db.String(128))
+    size = db.Column(db.Integer())
+    lastmodified = db.Column(db.String(128))
+    skip = db.Column(db.Boolean)
+
+    def __init__(self, **kwargs):
+        # CAll Flask-SQLAlchemy's constructor.
+        super(Ticker, self).__init__(**kwargs)
+        
 #class Dashboard(object):
 #    @classmethod
 #    def group_and_count_users(cls):

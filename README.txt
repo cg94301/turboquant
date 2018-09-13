@@ -79,3 +79,19 @@ There are several ways to UPDATE using sqlalchemy
 
 4) setattr(user, 'no_of_logins', user.no_of_logins+1)
    session.commit()
+
+
+***********
+How to get the name of a submitted form in Flask?
+https://stackoverflow.com/questions/26217779/how-to-get-the-name-of-a-submitted-form-in-flask
+
+
+There is no 'name of the form'. That information is not sent by the browser; the name attribute on <form> tags is meant to be used solely on the browser side (and deprecated to boot, use id instead).
+
+You could add that information by using a hidden field, but the most common way to distinguish between forms posting to the same form handler is to give the submit button a name:
+
+<submit name="form1" value="Submit!"/>
+and
+
+if 'form1' in request.form:
+but you could also use a <input type="hidden"> field to include the means to distinguish between forms.

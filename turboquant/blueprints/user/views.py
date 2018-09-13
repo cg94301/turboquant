@@ -107,8 +107,8 @@ def password_reset():
 
 
 @user.route('/signup', methods=['GET', 'POST'])
-#@anonymous_required()
-@login_required # Don't allow sign up. For trial deploy only!!
+@anonymous_required()
+#@login_required # Don't allow sign up. For trial deploy only!!
 def signup():
     form = SignupForm()
 

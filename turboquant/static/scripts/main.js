@@ -374,13 +374,14 @@ var bets = function () {
   });
 };
 
+
 // Initialize everything when the browser is ready.
 $(document).ready(function() {
-  momentjsClasses();
-  bulkDelete();
-  coupons();
-  stripe('#subscription_form');
-  stripe('#payment_form');
-  bets();
+    momentjsClasses();
+    bulkDelete();
+    coupons();
+    stripe('#subscription_form');
+    stripe('#payment_form');
+    bets();
 });
 

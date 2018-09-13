@@ -9,7 +9,7 @@ from flask_login import login_required, current_user
 from sqlalchemy import text
 
 from turboquant.blueprints.quant.forms import XGBForm
-from turboquant.blueprints.quant.models import Strategy
+from turboquant.blueprints.quant.models import Strategy, Ticker
 from turboquant.extensions import db
 from flask_wtf import Form
 
@@ -61,40 +61,122 @@ def dashboard():
     return render_template('quant/page/dashboard.html')
 
 
-@quant.route('/data/', methods=['GET','POST'])
-def data():
+@quant.route('/data/', defaults={'page': 1}, methods=['GET','POST'])
+@quant.route('/data/page/<int:page>', methods=['GET','POST'])
+def data(page):
+
+    print "*** debug", request
+    print "*** debug", request.method
+    print "*** debug", request.form.viewkeys()
+    print "*** debug", request.form.keys()
+    print "*** debug", 'upload' in request.form.keys()
+    print "*** debug", 'update' in request.form.keys()
     
     # Use basic form for CSRF token
     form = Form()
-
+    
     if request.method == 'POST':
+
+        if 'upload' in request.form.keys():
+
+            print "upload"
+            print "user_file", request.files.getlist('user_file')
         
-        for uf in request.files.getlist('user_file'):
-            print uf
+            for uf in request.files.getlist('user_file'):
+                print "uf:",uf
 
-            file = uf
+                file = uf
 
-            """
-            These attributes are also available
+                """
+                These attributes are also available
 
-            file.filename
-            file.content_type
-            file.content_length
-            file.mimetype
-            """
+                file.filename
+                file.content_type
+                file.content_length
+                file.mimetype
+                """
 
-            if file.filename == "":
-                return "Please select a file"
+                #if file.filename == "":
+                #    flash('Please select a file', 'danger')
+                ##return "Please select a file"
 
-            if file and allowed_file(file.filename):
-                file.filename = secure_filename(file.filename)
-                output = upload_file_to_s3(file, S3_BUCKET, str(current_user.id) + '/ticker')
-                #return str(output)
+                if file and allowed_file(file.filename):
+                    file.filename = secure_filename(file.filename)
+                    output = upload_file_to_s3(file, S3_BUCKET, str(current_user.id) + '/ticker')
+                    #return str(output)
 
-            else:
-                return redirect("quant/page/data.html", form=form)
-        
-    return render_template('quant/page/data.html', form=form)
+                else:
+                    flash('File format not allowed: ' + file.filename, 'danger')
+
+
+            #elif 'update' in request.form.keys():
+
+            payload = json.dumps({"uid":current_user.id})
+            print "*** debug payload:%s" % payload
+            print "*** debug", type(payload)
+            payloadb = str.encode(payload)
+                    
+            client = boto3.client('lambda')
+            response = client.invoke(
+                FunctionName='arn:aws:lambda:us-west-2:188444798703:function:list_s3',
+                Payload=payloadb,
+            )
+
+            tickercloud = response['Payload'].read()
+            print "***debug respone:", tickercloud
+            print "***debug type:", type(tickercloud)
+            tickercloudd = json.loads(tickercloud)
+            print "*** debug", type(tickercloudd)
+            #print "*** debug", type(tickercloudd[0])
+            #print "*** debug", tickercloudd[0]
+                    
+            #return redirect("quant/page/data.html")
+            
+            
+            # Ticker.query.delete()
+
+            tickercloud_names = [s[0] for s in tickercloudd]
+            print "tickercloud_names", tickercloud_names
+
+            tickerdb = Ticker.query.filter(Ticker.user_id == current_user.id)
+            tickerdb_names = [s.tid for s in tickerdb.all()]
+            print "tickerdb_names", tickerdb_names
+
+            # tickercloud: [["AAPL", 233285, "2018-09-08T16:53:24+00:00"], ["ORCL", 197427, "2018-09-08T18:15:59+00:00"], ["SBUX", 226567, "2018-09-08T15:11:44+00:00"]]
+            for tic in tickercloudd:
+                print "debug: updating ", tic[0]
+
+                # are there any tickers in DB that were removed from cloud?
+                if tic[0] in tickerdb_names:
+                    tickerdb_names.remove(tic[0])
+
+                x = tickerdb.filter(Ticker.tid==tic[0]).first()
+                print "x",x
+                if x:
+                    #x.tid = tic[0]
+                    x.size = tic[1]
+                    x.lastmodified = tic[2]
+                else:
+                    t = Ticker(user_id=current_user.id, tid=tic[0], skip=False, size=tic[1], lastmodified=tic[2])
+                    db.session.add(t)
+
+                #db.session.add(Ticker(user_id=current_user.id, tid=tid,size=size,lastmodified=lastmodified))
+
+            print "tickerdb_names minus cloud:", tickerdb_names
+
+            for tic in tickerdb_names:
+                x = tickerdb.filter(Ticker.tid==tic).first()
+                db.session.delete(x)
+
+            db.session.commit()
+                
+                    
+    paginated_tickers = Ticker.query \
+                              .filter(Ticker.user_id == current_user.id) \
+                              .order_by(Ticker.tid.asc()) \
+                              .paginate(page, 20, True) 
+            
+    return render_template('quant/page/data.html', tickers=paginated_tickers, form=form)
 
 
 @quant.route('/generate/', methods=['GET','POST'])
@@ -125,6 +207,8 @@ def generate():
         flash('Thanks, expect a response shortly.', 'success')
         return redirect(url_for('quant.generate'))
 
+   
+    
     return render_template('quant/page/generate.html', form=form)
 
 #@quant.route('/strategies/')
@@ -146,7 +230,7 @@ def strategies(page):
         
         
         #if form.validate_on_submit():
-        from turboquant.blueprints.quant.tasks import describe_jobs
+        #from turboquant.blueprints.quant.tasks import describe_jobs
 
         # don't use delay. synchronous response.
         # when used w/o .delay the AWS credentials are not found.
