@@ -3,10 +3,17 @@ import boto3
 import json
 #from random import randint
 import random
-from turboquant.blueprints.quant.models import Strategy
+from turboquant.blueprints.quant.models import Strategy, Ticker
+from sqlalchemy import and_
+import itertools
+import random
 
 celery = create_celery_app()
 
+def get_jobid(id):
+    code = ''.join(random.choice('0123456789abcdefghijklmnopqrstuvwxyz') for i in range(8))
+    jobid = str(id) + '-' + str(code)
+    return jobid
 
 @celery.task()
 def launch_xgb_job(id, num_round, max_depth, eta):
@@ -45,6 +52,72 @@ def launch_xgb_job(id, num_round, max_depth, eta):
     return {}
 
 @celery.task()
+def launch_batch_job(uid,params):
+
+    print params
+    
+    tickersq = Ticker.query.filter(and_(Ticker.user_id == uid, Ticker.skip == False)).all()
+    
+    tickers = [t.tid for t in tickersq]
+    print "task tickers:", tickers
+
+    # do preprocessing for all tickers here
+    
+    num_round_from = int(params['num_round_from'])
+    num_round_to = int(params['num_round_to'])
+    num_round_step = int(params['num_round_step'])
+    max_depth_from = int(params['max_depth_from'])
+    max_depth_to = int(params['max_depth_to'])
+    eta_from = float(params['eta_from'])
+    eta_to = float(params['eta_to'])
+    print type(num_round_from)
+
+    num_round = [num_round_from, num_round_to]
+    num_round_max = max(num_round)
+    num_round_min = min(num_round)
+    num_round_range = range(num_round_min, num_round_max+1, num_round_step)
+    print num_round_range
+    
+    max_depth = [max_depth_from, max_depth_to]
+    max_depth_max = max(max_depth)
+    max_depth_min = min(max_depth)
+    max_depth_range = range(max_depth_min, max_depth_max+1, 1)
+    print max_depth_range
+
+
+    eta_lookup = {1:0,0.1:-1,0.01:-2,0.001:-3}
+    eta = [eta_from, eta_to]
+    eta_max = max(eta)
+    eta_min = min(eta)
+    #print "max",eta_max
+    #print "min",eta_min
+    #print eta_lookup[eta_max]
+    #print eta_lookup[eta_min]
+
+    eta_range =[ 10** exponent for exponent in range(eta_lookup[eta_min], eta_lookup[eta_max]+1)]
+    print eta_range
+    
+    ticker_range = tickers
+    print ticker_range
+
+    comb = list(itertools.product(ticker_range,num_round_range,max_depth_range,eta_range))
+    print "You have configured %s strategies" % len(comb)
+    print comb
+
+
+    jobid = get_jobid(1)
+    print "jobid:", jobid
+    print (jobid,) + comb[0]
+
+    comb_id = [ (get_jobid(1),) + job for job in comb ]
+    print comb_id
+
+    # [('1-zgmyrhbh', u'CVX', 400, 1, 0.1), ('1-1tdntl4m', u'CVX', 400, 2, 0.1), ('1-g8zaebpf', u'CVX', 400, 3, 0.1), ('1-j06euwhm', u'AAPL', 400, 1, 0.1), ('1-v5qm5xv6', u'AAPL', 400, 2, 0.1), ('1-3oudkvz9', u'AAPL', 400, 3, 0.1)]
+
+    # write to DB. pending jobs.
+    
+
+@celery.task()
 def launch_sfn_job(id, ticker, num_round, max_depth, eta):
     """
     Send a contact e-mail.
@@ -78,6 +151,8 @@ def launch_sfn_job(id, ticker, num_round, max_depth, eta):
     payload = json.dumps(params)
     payloadb = str.encode(payload)
 
+    # TODO: call combine. get list of jobs so they can enter DB. Then call new SFN with that list.
+    
     # InvocationType 'Event' -> asynchronous
     # InvocationType 'DryRun' -> test w/o actually calling the function
     response = client.start_execution(

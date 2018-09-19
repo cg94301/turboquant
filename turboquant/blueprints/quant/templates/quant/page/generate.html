@@ -55,6 +55,10 @@
                 </div>
               </div>
 
+              <form class="form-horizontal" role="form" method="post">
+                <!-- <form class="" role="form" method="post"> -->
+                {{ form.hidden_tag() }}
+              
               <div class="card-box">
                 <div class="row">
                   <button type="submit" name="hyper" class="btn btn-custom waves-effect w-md waves-light m-b-5">Submit <span><i class="fa fa-cloud-upload"></i></span></button>
@@ -66,9 +70,7 @@
               <div class="card-box">
                 <div class="row">
                   
-                  <form class="form-horizontal" role="form" method="post">
-                    <!-- <form class="" role="form" method="post"> -->
-                    {{ form.hidden_tag() }}
+
                     
 
                     <div class="row">

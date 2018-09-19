@@ -28,6 +28,7 @@ def allowed_file(filename):
 S3_BUCKET = 'cgiam.sagemaker'
 
 s3 = boto3.client("s3")
+client = boto3.client('lambda')
 
 def upload_file_to_s3(file, bucket_name, uid, acl="public-read"):
 
@@ -116,7 +117,7 @@ def data(page):
             print "*** debug", type(payload)
             payloadb = str.encode(payload)
                     
-            client = boto3.client('lambda')
+
             response = client.invoke(
                 FunctionName='arn:aws:lambda:us-west-2:188444798703:function:list_s3',
                 Payload=payloadb,
@@ -169,6 +170,8 @@ def data(page):
                 db.session.delete(x)
 
             db.session.commit()
+
+
                 
                     
     paginated_tickers = Ticker.query \
@@ -184,15 +187,6 @@ def generate():
     print "configuration:",request
     print "configuration:",request.form
     print "configuration:",request.form.get('csrf_token')
-    print "configuration:",request.form.get('num-round-from')
-    print "configuration:",request.form.get('num-round-to')
-    print "configuration:",request.form.get('num-round-step')
-    print "configuration:",request.form.get('max-depth-from')
-    print "configuration:",request.form.get('max-depth-to')
-    print "configuration:",request.form.get('eta-from')
-    print "configuration:",request.form.get('eta-to')    
-
-    
     print "current_user:",current_user.id
     # Pre-populate the email field if the user is signed in.
     #form = XGBForm(obj=current_user)
@@ -201,15 +195,37 @@ def generate():
     
     if form.validate_on_submit():
         # This prevents circular imports.
-        from turboquant.blueprints.quant.tasks import launch_xgb_job, launch_sfn_job
+        from turboquant.blueprints.quant.tasks import launch_batch_job
 
         # launch_xgb_job(request.form.get('num-round'),
-        task = launch_sfn_job.delay(current_user.id,
-                                    'AAPL',
-                                    request.form.get('num-round-from'),
-                                    request.form.get('max-depth-from'),
-                                    request.form.get('eta-from'))
+        #task = launch_sfn_job.delay(current_user.id,
+        #                            'AAPL',
+        #                            request.form.get('num-round-from'),
+        #                            request.form.get('max-depth-from'),
+        #                            request.form.get('eta-from'))
 
+        num_round_from = request.form.get('num-round-from')
+        num_round_to = request.form.get('num-round-to')
+        num_round_step = request.form.get('num-round-step')
+        max_depth_from = request.form.get('max-depth-from')
+        max_depth_to = request.form.get('max-depth-to')
+        eta_from = request.form.get('eta-from')
+        eta_to = request.form.get('eta-to')    
+
+        params = {"num_round_from": num_round_from, "num_round_to": num_round_to, "num_round_step": num_round_step,
+                  "max_depth_from": max_depth_from, "max_depth_to": max_depth_to,
+                  "eta_from": eta_from, "eta_to": eta_to}        
+
+        # do combinatorics here. take ticker from DB not cloud. the launch sfn with list of jobs.
+        # move preprocess into data step.
+        
+        payload = json.dumps({"uid":current_user.id, "params":params})
+        print "*** debug payload:%s" % payload
+        print "*** debug", type(payload)
+        payloadb = str.encode(payload)        
+        
+        task = launch_batch_job.delay(current_user.id, params)
+        
         flash('Thanks, expect a response shortly.', 'success')
         return redirect(url_for('quant.generate'))
 
