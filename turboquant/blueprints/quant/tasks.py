@@ -54,14 +54,31 @@ def launch_xgb_job(id, num_round, max_depth, eta):
 @celery.task()
 def launch_batch_job(uid,params):
 
-    print params
-    
+    # ML params
+    print "params:",params
+
+    # Get tickers llive when task actually executes.
     tickersq = Ticker.query.filter(and_(Ticker.user_id == uid, Ticker.skip == False)).all()
-    
     tickers = [t.tid for t in tickersq]
     print "task tickers:", tickers
 
     # do preprocessing for all tickers here
+
+    client = boto3.client('lambda')
+    payload = {"uid": uid, "seed":"", "tickers":tickers}
+    payloads = json.dumps(payload)
+    payloadb = str.encode(payloads)
+
+    # InvocationType 'Event' -> asynchronous
+    # InvocationType 'DryRun' -> test w/o actually calling the function
+    response = client.invoke(
+        FunctionName='arn:aws:lambda:us-west-2:188444798703:function:preproc2',
+        Payload=payloadb,
+    )
+
+    rs = response['Payload']
+    rseed = rs.read()
+    print "rseed:", rseed
     
     num_round_from = int(params['num_round_from'])
     num_round_to = int(params['num_round_to'])
