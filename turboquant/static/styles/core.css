@@ -819,9 +819,9 @@ select.form-control {
   font-weight: 700;
   line-height: 22px;
 }
-.nav-tabs > li > a:hover {
+/* .nav-tabs > li > a:hover {
   border-bottom: 0 !important;
-}
+} */
 .nav-tabs > li {
   margin-bottom: -2px;
 }
