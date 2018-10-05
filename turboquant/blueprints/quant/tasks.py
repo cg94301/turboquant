@@ -55,13 +55,17 @@ def launch_xgb_job(id, num_round, max_depth, eta):
 def launch_batch_job(uid,params):
 
     # ML params
+    # raw parameter ranges
     print "params:",params
 
-    # Get tickers llive when task actually executes.
+    # Run ML for all tickers that are not skipped
+    # Note: Get tickers live when task actually executes in queue.
     tickersq = Ticker.query.filter(and_(Ticker.user_id == uid, Ticker.skip == False)).all()
     tickers = [t.tid for t in tickersq]
     print "task tickers:", tickers
 
+    # Step 1:
+    # PREPROCESS CSV
     # do preprocessing for all tickers here
 
     client = boto3.client('lambda')
@@ -76,9 +80,13 @@ def launch_batch_job(uid,params):
         Payload=payloadb,
     )
 
+    # seed can be reused for debug purposes
     rs = response['Payload']
     rseed = rs.read()
     print "rseed:", rseed
+
+    # Step 2:
+    # Create all permuatations from provided ranges
     
     num_round_from = int(params['num_round_from'])
     num_round_to = int(params['num_round_to'])
@@ -102,6 +110,7 @@ def launch_batch_job(uid,params):
     print max_depth_range
 
 
+    # translate from float to exponent
     eta_lookup = {1:0,0.1:-1,0.01:-2,0.001:-3}
     eta = [eta_from, eta_to]
     eta_max = max(eta)
@@ -118,7 +127,7 @@ def launch_batch_job(uid,params):
     print ticker_range
 
     comb = list(itertools.product(ticker_range,num_round_range,max_depth_range,eta_range))
-    print "You have configured %s strategies" % len(comb)
+    print "You have configured %s strategies:" % len(comb)
     print comb
 
 
@@ -127,12 +136,45 @@ def launch_batch_job(uid,params):
     print (jobid,) + comb[0]
 
     comb_id = [ (get_jobid(1),) + job for job in comb ]
+    print "Running the following jobs:"
     print comb_id
 
+    # This is how jobs look like. List of tuples.
     # [('1-zgmyrhbh', u'CVX', 400, 1, 0.1), ('1-1tdntl4m', u'CVX', 400, 2, 0.1), ('1-g8zaebpf', u'CVX', 400, 3, 0.1), ('1-j06euwhm', u'AAPL', 400, 1, 0.1), ('1-v5qm5xv6', u'AAPL', 400, 2, 0.1), ('1-3oudkvz9', u'AAPL', 400, 3, 0.1)]
 
-    # write to DB. pending jobs.
+    # Launch job in cloud.
+    # Call SFN to do batch processing.
+    # tqml7 is batch processor. Calls tqml8 for individual runs.
+
+    # {"uid":1,"jobs":[('1-zgmyrhbh', u'CVX', 400, 1, 0.1), ('1-1tdntl4m', u'CVX', 400, 2, 0.1)],"batch_size":1, "active":[], "all_done": False, "any_done": False }
+
+    wait_time = 20
+    batch_size = 2
     
+    client = boto3.client('stepfunctions')
+    params = {"batch": {"uid": uid, "jobs":comb_id, "batch_size":batch_size, "active":[], "all_done": False, "any_done": False, "wait_time": wait_time, "seed": rseed}}
+    payload = json.dumps(params)
+    payloadb = str.encode(payload)
+    
+    response = client.start_execution(
+        stateMachineArn='arn:aws:states:us-west-2:188444798703:stateMachine:tqml7',
+        input=payloadb
+        #name=name
+    )
+
+    print "launched tqml7:", response['executionArn']
+    # write to DB. pending jobs.
+    #s = Strategy()
+    #s.user_id = id
+    #s.name = name
+    #s.ticker = ticker
+    ##s.startdate = response['startDate']
+    #s.execution_arn = response['executionArn']
+    #s.status = 'PENDING'
+    #s.save()
+
+    # launched w/ delay. no return value.
+    return None
 
 @celery.task()
 def launch_sfn_job(id, ticker, num_round, max_depth, eta):
