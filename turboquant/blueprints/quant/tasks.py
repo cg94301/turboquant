@@ -10,9 +10,9 @@ import random
 
 celery = create_celery_app()
 
-def get_jobid(id):
-    code = ''.join(random.choice('0123456789abcdefghijklmnopqrstuvwxyz') for i in range(8))
-    jobid = str(id) + '-' + str(code)
+def get_jobid(uid,len):
+    code = ''.join(random.choice('0123456789abcdefghijklmnopqrstuvwxyz') for i in range(len))
+    jobid = str(uid) + '-' + str(code)
     return jobid
 
 @celery.task()
@@ -131,11 +131,11 @@ def launch_batch_job(uid,params):
     print comb
 
 
-    jobid = get_jobid(1)
-    print "jobid:", jobid
-    print (jobid,) + comb[0]
+    #jobid = get_jobid(uid,10)
+    #print "jobid:", jobid
+    #print (jobid,) + comb[0]
 
-    comb_id = [ (get_jobid(1),) + job for job in comb ]
+    comb_id = [ (get_jobid(uid,10),) + job for job in comb ]
     print "Running the following jobs:"
     print comb_id
 
@@ -150,30 +150,45 @@ def launch_batch_job(uid,params):
 
     wait_time = 20
     batch_size = 2
+    sfnid = get_jobid(uid,12)
     
     client = boto3.client('stepfunctions')
     params = {"batch": {"uid": uid, "jobs":comb_id, "batch_size":batch_size, "active":[], "all_done": False, "any_done": False, "wait_time": wait_time, "seed": rseed}}
     payload = json.dumps(params)
     payloadb = str.encode(payload)
+
+    try:
+        response = client.start_execution(
+            stateMachineArn='arn:aws:states:us-west-2:188444798703:stateMachine:tqbatch',
+            input=payloadb,
+            name=sfnid
+        )
+
+        print "launched tqbatch:", response['executionArn']
+        # write to DB. pending jobs.
+        # this does not use session. instead uses class method.
+        jobs = []
+
+        for job in comb_id:
+            s = Strategy()
+            s.user_id = uid
+            s.name = job[0]
+            s.ticker = job[1]
+            ##s.startdate = response['startDate']
+            #s.execution_arn = response['executionArn']
+            s.status = 'PENDING'
+            s.save()        
+            
+            # bulk save needs Session?
+            #s = Session()
+            #jobs = [ Strategy(user_id=uid, name=job[0], ticker=job[1], status='PENDING') for job in comb_id]               
+            #s.bulk_save_objects(jobs)
+            #s.commit()
+            
+            # launched w/ delay. no return value.
+    except:
+        print "Launch failed!"
     
-    response = client.start_execution(
-        stateMachineArn='arn:aws:states:us-west-2:188444798703:stateMachine:tqml7',
-        input=payloadb
-        #name=name
-    )
-
-    print "launched tqml7:", response['executionArn']
-    # write to DB. pending jobs.
-    #s = Strategy()
-    #s.user_id = id
-    #s.name = name
-    #s.ticker = ticker
-    ##s.startdate = response['startDate']
-    #s.execution_arn = response['executionArn']
-    #s.status = 'PENDING'
-    #s.save()
-
-    # launched w/ delay. no return value.
     return None
 
 @celery.task()

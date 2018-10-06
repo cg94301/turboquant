@@ -247,6 +247,8 @@ def strategies(page):
 
     # Use basic form for CSRF token
     form = Form()
+
+    uid = current_user.id
     
     if request.method == 'POST':
         
@@ -260,26 +262,18 @@ def strategies(page):
         # synchronous scheduled from docker machine webiste which has no .aws
         #response = describe_jobs.delay(current_user.id)
 
-        # Get all strategy arns
-        strategies_arn = Strategy.query\
-                                 .filter(Strategy.user_id == current_user.id)
+        # Get all strategy jobids
+        strategies = Strategy.query.filter(Strategy.user_id == uid)
 
-        arns = [arn.execution_arn for arn in strategies_arn]
-        print "*** debug arns:", arns
-        payload = json.dumps({"executionArn":arns})
+        jobids = [job.name for job in strategies]
+        print "*** debug jobids:", jobids
+        payload = json.dumps({"jobs":jobids})
         print "*** debug payload:%s" % payload
         print "*** debug", type(payload)
         payloadb = str.encode(payload)
 
-        #testarn = {"executionArn": ["arn:aws:states:us-west-2:188444798703:execution:tqml5:1-2qzl45i1"] }
-        #testarnstr = json.dumps(testarn)
-        #testarnstrb = str.encode(testarnstr)
-        #print "*** debug:", type(testarnstr)
-        #print "*** debug:", testarnstrb
-
-        # why is region not found from .aws ??
         #client = boto3.client('lambda', region_name='us-west-2')
-        client = boto3.client('lambda')
+        #client = boto3.client('lambda')
         response = client.invoke(
             FunctionName='arn:aws:lambda:us-west-2:188444798703:function:describe_execution',
             Payload=payloadb,
@@ -292,30 +286,34 @@ def strategies(page):
 
         for stat in statsd:
         
-            name_out = stat['name']
-            print "***name:", name_out
+            jobid_out = stat['jobid']
+            print "***jobid:", jobid_out
             status_out = stat['status']
             print "***debug status:", status_out
 
-            q = Strategy.query.filter_by(name=name_out).first()
+            # find if exists and update.
+            q = Strategy.query.filter_by(name=jobid_out).first()
             q.status = status_out
         
             # outpuf from SFN is json encoded string
             if 'output' in stat:
                 outputd = json.loads(stat['output'])
-                auc_out = outputd['statistics']['auc']
+                print outputd
+                print type(outputd)
+                outputd = outputd['train']
+                auc_out = outputd['stats']['auc']
                 print "***debug:", auc_out
                 q.auc = auc_out
 
-                precision_out = outputd['statistics']['precision']
-                recall_out = outputd['statistics']['recall']
+                precision_out = outputd['stats']['precision']
+                recall_out = outputd['stats']['recall']
                 q.precision = precision_out
                 q.recall = recall_out
 
-                sharpe_out = outputd['finstats']['sharpe']
+                sharpe_out = outputd['fin']['sharpe']
                 q.sharpe = sharpe_out
                 #q = db.session.query().\
-                    #   filter(Strategy.name == name_out).\
+                    #   filter(Strategy.name == jobid_out).\
                     #   update({"status": status_out})
                 #db.session.commit()
                 #    #return redirect(url_for('quant.strategies'))
