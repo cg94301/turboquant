@@ -6,6 +6,7 @@
 {% block title %}Admin - Users / List{% endblock %}
 
 {% block body %}
+
 <div class="container">
   {{ f.search('admin.users') }}
 
@@ -100,5 +101,11 @@
 
   {{ items.paginate(users) }}
   {% endif %}
+
+  <!-- this little snippet causes JS to load!! -->
+  <script>
+    var resizefunc = [];
+  </script>
+  
 </div>
 {% endblock %}
