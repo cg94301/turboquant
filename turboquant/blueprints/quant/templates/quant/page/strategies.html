@@ -44,79 +44,30 @@
             </div>
           </div>
 
-          <div class="card-box">
-            <div class="row">
-              <div class="row">
-                <div class="col-sm-12">
-                  <!-- <h4 class="header-title">Strategies</h4> -->
-                  <p class="text-muted m-b-30 font-13">
-                    Individual form controls automatically receive some global styling. All textual <code>&lt;input&gt;</code>,
-                    <code>&lt;textarea&gt;</code>, and <code>&lt;select&gt;</code> elements with <code>.form-control</code> are set to
-                    <code>width: 100%;</code> by default. Wrap labels and controls in <code>.form-group</code> for optimum spacing.
-                  </p>
-                </div>
-              </div>
+          <div class="row">
+            <div class="col-sm-12 card-box">
+              <p class="text-muted m-b-30 font-13">
+                Individual form controls automatically receive some global styling. All textual <code>&lt;input&gt;</code>,
+                <code>&lt;textarea&gt;</code>, and <code>&lt;select&gt;</code> elements with <code>.form-control</code> are set to
+                <code>width: 100%;</code> by default. Wrap labels and controls in <code>.form-group</code> for optimum spacing.
+              </p>
             </div>
           </div>
           
-	  <!-- Page-Title -->
-          <!-- <div class="row">
-            <div class="col-sm-12">
-              <div class="btn-group pull-right m-t-5 m-b-20">
-                <button type="button" class="btn btn-custom dropdown-toggle waves-effect waves-light" data-toggle="dropdown" aria-expanded="false">Settings <span class="m-l-5"><i class="fa fa-cog"></i></span></button>
-                <ul class="dropdown-menu" role="menu">
-                  <li><a href="#">Action</a></li>
-                  <li><a href="#">Another action</a></li>
-                  <li><a href="#">Something else here</a></li>
-                  <li class="divider"></li>
-                  <li><a href="#">Separated link</a></li>
-                </ul>
-              </div>
-              <h4 class="page-title">Datatables</h4>
-            </div>
-          </div> -->
           <div class="row">
-            <div class="col-sm-8">
-              <div class="card-box table-responsive">
-
-                <!-- <a href="{{ url_for('quant.strategies') }}">
-                  <button type="button" class="btn btn-danger waves-effect w-md waves-light m-b-5">Retrieve Strategies</button>
-                </a> -->
-                <!-- <h5 class="header-title m-t-0 m-b-30"> Retrieve strategies from cloud</h5> -->
-                <form action="{{ url_for('quant.strategies') }}" method="post">
-                   {{ form.hidden_tag() }}
-                   <button type="submit" name="update" class="btn btn-custom waves-effect w-md waves-light m-b-5">Retrieve Strategies <span><i class="fa fa-cloud-download"></i></span></button>
-                </form>
+            <form action="{{ url_for('quant.strategies') }}" method="post">            
+              <div class="col-sm-8 card-box">
+                {{ form.hidden_tag() }}
+                <button type="submit" name="update" class="btn btn-custom waves-effect w-md waves-light">Retrieve Strategies <span><i class="fa fa-cloud-download"></i></span></button>
               </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="card-box table-responsive">
-                <!-- <h5 class="header-title m-t-0 m-b-30">Terminate cloud jobs</h5> -->
-                <form action="{{ url_for('quant.strategies') }}" method="post">
-                   {{ form.hidden_tag() }}
-                   <button type="submit" name="terminate" class="btn btn-danger btn-trans waves-effect w-md waves-light m-b-5">Terminate Jobs</button>
-                </form>
-                
+              <div class="col-sm-4 card-box">
+                <button type="submit" name="terminate" class="btn btn-danger btn-trans waves-effect w-md waves-light">Terminate Jobs</button>
               </div>
-            </div>            
+            </form>
           </div>
           <div class="row">
-            <div class="col-sm-12">
-              <div class="card-box table-responsive">
-                <!-- <div class="dropdown pull-right">
-                  <a href="#" class="dropdown-toggle card-drop" data-toggle="dropdown" aria-expanded="false">
-                    <i class="zmdi zmdi-more-vert"></i>
-                  </a>
-                  <ul class="dropdown-menu" role="menu">
-                    <li><a href="#">Action</a></li>
-                    <li><a href="#">Another action</a></li>
-                    <li><a href="#">Something else here</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#">Separated link</a></li>
-                  </ul>
-                </div> -->
-
-                <!-- <h4 class="header-title m-t-0 m-b-30">Strategies</h4> -->
+            <div class="col-sm-12 card-box table-responsive">
+              <!-- <div class="card-box table-responsive"> -->
 
                 <table id="datatable" class="table table-striped dt-responsive nowrap">
                   <thead>
@@ -184,7 +135,7 @@
                     {% endfor %}
                   </tbody>
                 </table>
-              </div>
+              <!-- </div> -->
             </div><!-- end col -->
           </div>
           <!-- end row -->

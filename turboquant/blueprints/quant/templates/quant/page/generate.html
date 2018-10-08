@@ -40,32 +40,28 @@
           </div>
 
           <div class="row">
-            <div class="col-xs-12">
-              
+            <div class="col-xs-12 card-box">
+              <p class="text-muted m-b-30 font-13">
+                Individual form controls automatically receive some global styling. All textual <code>&lt;input&gt;</code>,
+                <code>&lt;textarea&gt;</code>, and <code>&lt;select&gt;</code> elements with <code>.form-control</code> are set to
+                <code>width: 100%;</code> by default. Wrap labels and controls in <code>.form-group</code> for optimum spacing.
+              </p>
+            </div>
+          </div>
+
+          <form class="form-horizontal" role="form" method="post">
+            {{ form.hidden_tag() }}
+            
+            <div class="row">
               <div class="card-box">
-                <div class="row">
-                  <div class="col-sm-12">
-                    <!-- <h4 class="header-title">Hyper Parameters</h4> -->
-                    <p class="text-muted m-b-30 font-13">
-                      Individual form controls automatically receive some global styling. All textual <code>&lt;input&gt;</code>,
-                      <code>&lt;textarea&gt;</code>, and <code>&lt;select&gt;</code> elements with <code>.form-control</code> are set to
-                      <code>width: 100%;</code> by default. Wrap labels and controls in <code>.form-group</code> for optimum spacing.
-                    </p>
-                  </div>
-                </div>
+                <button type="submit" name="hyper" class="btn btn-custom waves-effect w-md waves-light m-b-5">Submit <span><i class="fa fa-cloud-upload"></i></span></button>
+                <span>X strategies configured</span>
               </div>
+            </div>              
 
-              <form class="form-horizontal" role="form" method="post">
-                <!-- <form class="" role="form" method="post"> -->
-                {{ form.hidden_tag() }}
+            <div class="row">
+              <div class="card-box">
                 
-                <div class="card-box">
-                  <div class="row">
-                    <button type="submit" name="hyper" class="btn btn-custom waves-effect w-md waves-light m-b-5">Submit <span><i class="fa fa-cloud-upload"></i></span></button>
-                    <span>X strategies configured</span>
-                  </div>
-                </div>              
-
                 <!-- tabs -->
                 <ul class="nav nav-tabs">
                   <li role="presentation" class="active">
@@ -78,151 +74,143 @@
 
                 <div class="tab-content">
                   <div role="tabpanel" class="tab-pane fade in active" id="core">
+
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <h4 class="m-t-0 header-title"><b>Number of Trees</b></h4>
+                      </div>                         
                     
-                    <!-- Forms -->
-                    <div class="card-box">
-
-                      <div class="row">
-
-                        <div class="col-sm-3">
-                          <h4 class="m-t-0 header-title"><b>Number of Trees</b></h4>
-                        </div>                         
-                        
-                        <div class="col-sm-3">                      
-                          <div class="form-group">
-                            <label for="num-round" class="col-sm-3 control-label">From</label>
-                            <div class="col-sm-9">
-                              <input type="text" class="form-control input-sm" id="num-round" value="400" name="num-round-from" placeholder="{{ form.description }}">
-                            </div>
+                      <div class="col-sm-3">                      
+                        <div class="form-group">
+                          <label for="num-round" class="col-sm-3 control-label">From</label>
+                          <div class="col-sm-9">
+                            <input type="text" class="form-control input-sm" id="num-round" value="400" name="num-round-from" placeholder="{{ form.description }}">
                           </div>
                         </div>
-                        
-                        <div class="col-sm-3">                      
-                          <div class="form-group">
-                            <label for="max-depth" class="col-sm-3 control-label">To</label>
-                            <div class="col-sm-9">
-                              <input type="text" class="form-control input-sm" id="max-depth" value="400" name="num-round-to" placeholder="How deep?">
-                            </div>
-                          </div>
-                        </div>                      
-                        
-                        <div class="col-sm-3">                      
-                          <div class="form-group">
-                            <label for="eta" class="col-sm-3 control-label">Step</label>
-                            <div class="col-sm-9">
-                              <input type="text" class="form-control input-sm" id="eta" value="100" name="num-round-step" placeholder="How fast?">
-                            </div>
-                          </div>                      
-                        </div>                                 
-                      </div> <!-- row -->
-
-                      <hr>
-
-                      <div class="row">
-                        
-                        <div class="col-sm-3">
-                          <h4 class="m-t-0 header-title"><b>Tree Depth</b></h4>
-                        </div>                  
-                        
-                        <div class="col-sm-3">                      
-                          <div class="form-group">
-                            <label for="num-round" class="col-sm-3 control-label">From</label>
-                            <div class="col-sm-9">
-                              <select class="form-control input-sm" name="max-depth-from">
-                                <option>1</option>
-                                <option>2</option>
-                                <option selected="selected">3</option>
-                                <option>4</option>
-                                <option>5</option>
-                                <option>6</option>
-                                <option>7</option>
-                                <option>8</option>
-                                <option>9</option>
-                                <option>10</option>
-                              </select>                        
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <div class="col-sm-3">                      
-                          <div class="form-group">
-                            <label for="max-depth" class="col-sm-3 control-label">To</label>
-                            <div class="col-sm-9">
-                              <select class="form-control input-sm" name="max-depth-to">
-                                <option>1</option>
-                                <option>2</option>
-                                <option selected="selected">3</option>
-                                <option>4</option>
-                                <option>5</option>
-                                <option>6</option>
-                                <option>7</option>
-                                <option>8</option>
-                                <option>9</option>
-                                <option>10</option>
-                              </select>
-                            </div>
-                          </div>
-                        </div>                      
-                        
-                      </div> <!-- row -->
-
-                      <hr>
-
-                      <div class="row">
-                        
-                        <div class="col-sm-3">
-                          <h4 class="m-t-0 header-title"><b>Learning Rate</b></h4>
-                        </div>
-                        
-                        <div class="col-sm-3">                      
-                          <div class="form-group">
-                            <label for="num-round" class="col-sm-3 control-label">From</label>
-                            <div class="col-sm-9">
-                              <!-- <input type="text" class="form-control" id="num-round" value="100" name="num-round" placeholder="{{ form.description }}"> -->
-                              <select class="form-control input-sm" name="eta-from">
-                                <option>1</option>
-                                <option selected="selected">0.1</option>
-                                <option>0.01</option>
-                                <option>0.001</option>
-                              </select>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <div class="col-sm-3">                      
-                          <div class="form-group">
-                            <label for="max-depth" class="col-sm-3 control-label">To</label>
-                            <div class="col-sm-9">
-                              <!-- <input type="text" class="form-control" id="max-depth" value="3" name="max-depth" placeholder="How deep?"> -->
-                              <select class="form-control input-sm" name="eta-to">
-                                <option>1</option>
-                                <option selected="selected">0.1</option>
-                                <option>0.01</option>
-                                <option>0.001</option>
-                              </select>
-                            </div>
-                          </div>
-                        </div>                      
-                        
-                      </div> <!-- row -->
+                      </div>
                       
-                    </div> <!-- card box -->
-                  </div> <!-- tabpanel -->
+                      <div class="col-sm-3">                      
+                        <div class="form-group">
+                          <label for="max-depth" class="col-sm-3 control-label">To</label>
+                          <div class="col-sm-9">
+                            <input type="text" class="form-control input-sm" id="max-depth" value="400" name="num-round-to" placeholder="How deep?">
+                          </div>
+                        </div>
+                      </div>                      
+                        
+                      <div class="col-sm-3">                      
+                        <div class="form-group">
+                          <label for="eta" class="col-sm-3 control-label">Step</label>
+                          <div class="col-sm-9">
+                            <input type="text" class="form-control input-sm" id="eta" value="100" name="num-round-step" placeholder="How fast?">
+                          </div>
+                        </div>                      
+                      </div>                                 
+                    </div> <!-- row -->
+
+                    <hr>
+                    
+                    <div class="row">
+                      
+                      <div class="col-sm-3">
+                        <h4 class="m-t-0 header-title"><b>Tree Depth</b></h4>
+                      </div>                  
+                      
+                      <div class="col-sm-3">                      
+                        <div class="form-group">
+                          <label for="num-round" class="col-sm-3 control-label">From</label>
+                          <div class="col-sm-9">
+                            <select class="form-control input-sm" name="max-depth-from">
+                              <option>1</option>
+                              <option>2</option>
+                              <option selected="selected">3</option>
+                              <option>4</option>
+                              <option>5</option>
+                              <option>6</option>
+                              <option>7</option>
+                              <option>8</option>
+                              <option>9</option>
+                              <option>10</option>
+                            </select>                        
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="col-sm-3">                      
+                        <div class="form-group">
+                          <label for="max-depth" class="col-sm-3 control-label">To</label>
+                          <div class="col-sm-9">
+                            <select class="form-control input-sm" name="max-depth-to">
+                              <option>1</option>
+                              <option>2</option>
+                              <option selected="selected">3</option>
+                              <option>4</option>
+                              <option>5</option>
+                              <option>6</option>
+                              <option>7</option>
+                              <option>8</option>
+                              <option>9</option>
+                              <option>10</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>                      
+                      
+                    </div> <!-- row -->
+
+                    <hr>
+                    
+                    <div class="row">
+                        
+                      <div class="col-sm-3">
+                        <h4 class="m-t-0 header-title"><b>Learning Rate</b></h4>
+                      </div>
+                        
+                      <div class="col-sm-3">                      
+                        <div class="form-group">
+                          <label for="num-round" class="col-sm-3 control-label">From</label>
+                          <div class="col-sm-9">
+                            <!-- <input type="text" class="form-control" id="num-round" value="100" name="num-round" placeholder="{{ form.description }}"> -->
+                            <select class="form-control input-sm" name="eta-from">
+                              <option>1</option>
+                              <option selected="selected">0.1</option>
+                              <option>0.01</option>
+                              <option>0.001</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="col-sm-3">                      
+                        <div class="form-group">
+                          <label for="max-depth" class="col-sm-3 control-label">To</label>
+                          <div class="col-sm-9">
+                            <!-- <input type="text" class="form-control" id="max-depth" value="3" name="max-depth" placeholder="How deep?"> -->
+                            <select class="form-control input-sm" name="eta-to">
+                              <option>1</option>
+                              <option selected="selected">0.1</option>
+                              <option>0.01</option>
+                              <option>0.001</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>                      
+                      
+                    </div> <!-- row -->
+                    
+                  </div>
+
                   <div role="tabpanel" class="tab-pane fade" id="advanced"><p>Lorem Ipsum</p>
                   </div>
                 </div> <!-- tabcontent -->
-                  
-              </form>
+              </div> <!-- cardbox -->
+            </div> <!-- row -->
+          </form>
               
-            </div>    
-          </div><!-- end row -->
         </div> <!-- container -->
-        
-          
       </div> <!-- content -->
     </div> <!-- content-page -->
-  </div>
-  <!-- END wrapper -->
+  </div> <!-- END wrapper -->
     
   <script>
     var resizefunc = [];
@@ -231,7 +219,7 @@
   <!-- jQuery  -->
   <!-- <script src="assets/js/jquery.min.js"></script>
        <script src="assets/js/bootstrap.min.js"></script>
-         <script src="assets/js/detect.js"></script>
+       <script src="assets/js/detect.js"></script>
          <script src="assets/js/fastclick.js"></script>
          <script src="assets/js/jquery.slimscroll.js"></script>
          <script src="assets/js/jquery.blockUI.js"></script>
@@ -245,7 +233,6 @@
          <script src="assets/js/jquery.app.js"></script> -->
     
     <!-- </body> -->
-  </div>
 </div>
 <!-- </html> -->
 {% endblock %}
