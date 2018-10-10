@@ -18,6 +18,8 @@
 <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
 <![endif]-->
 {% import 'macros/flash.html' as flash with context %}
+{% import 'macros/form.html' as f with context %}
+{% import 'macros/items.html' as items %}
 {% extends 'layouts/app.html' %}
 
 {% block title %}Data{% endblock %}
@@ -55,8 +57,8 @@
           </div>
           
           <div class="row">
-            <form action"{{ url_for('quant.data') }}" method="POST" enctype="multipart/form-data">
-              <div class="col-sm-5 card-box">
+            <form action="{{ url_for('quant.tickers_upload') }}" method="POST" enctype="multipart/form-data">
+              <div class="col-sm-12 card-box">
                 {{ form.hidden_tag() }}
                 <label class="btn btn-custom btn-file waves-effect waves-light">
                   <input type="file" multiple="multiple" name="user_file" style="display: none"
@@ -66,25 +68,42 @@
                 <button type="submit" name="upload" class="btn btn-custom waves-effect waves-light">Upload <span><i class="fa fa-cloud-upload"></i></span></button>
                 <span class="label label-warning" id="upload-file-info"></span>
               </div>
-              <div class="col-sm-7 card-box">
-                <button type="submit" name="skip" class="btn btn-pink waves-effect waves-light">Toggle Skip</button>
-                <button type="submit" name="delete" class="btn btn-danger btn-trans waves-effect waves-light">Delete</button>
-              </div>
             </form>
           </div>
 
           <div class="row">
+
             <div class="col-sm-12 card-box table-responsive">
+
+              {% call f.form_tag('quant.tickers_bulk_delete') %}
+              <div id="bulk_actions" colspan="4">
+                <div class="form-inline">
+                  <button type="submit" name="delete" class="btn btn-danger btn-trans waves-effect waves-light">Delete</button>
+                  {{ f.field(bulk_form.scope, inline=True) }}
+                </div>
+              </div>
               
               <table id="datatable" class="table table-striped dt-responsive nowrap">
                 <thead>
                   <tr>
                     <!-- <th>created_on</th> -->
                     <!-- <th>id</th> -->
-                    <th>ticker</th>
-                    <th>skip</th>
-                    <th>size</th>
-                    <th>created on</th>
+                    <th>
+                      <label for="select_all"></label>
+                      <input id="select_all" name="select_all" type="checkbox">
+                    </th>
+                    <th class="col-header">
+                      {{ items.sort('tid','ticker') }}
+                    </th>
+                    <!-- <th class="col-header">
+                      {{ items.sort('skip','skip') }}
+                    </th> -->
+                    <th class="col-header">
+                      {{ items.sort('size','size') }}
+                    </th>
+                    <th class="col-header">
+                      {{ items.sort('lastmodified','last modified') }}
+                    </th>
                   </tr>
                 </thead>
                 
@@ -92,15 +111,19 @@
                   {% for ticker in tickers.items %}
                   <tr>
                     <td>
-                      {{ ticker.tid }}
+                      <label for="bulk_ids"></label>
+                      <input class="checkbox-item" id="bulk_ids" name="bulk_ids"
+                             type="checkbox" value="{{ ticker.tid }}">
                     </td>
                     <td>
+                      {{ ticker.tid }}
+                    </td>
+                    <!-- <td>
                       {% if ticker.skip == False %}
-                      <!-- <span class="label label-success"> No </span> -->
                       {% else %}
                       <span class="label label-danger"> skipped </span>
                       {% endif %}
-                    </td>
+                    </td> -->
                     <td>
                       {{ ticker.size }}
                     </td>
@@ -111,6 +134,8 @@
                   {% endfor %}
                 </tbody>
               </table>
+              {% endcall %}
+              {{ items.paginate(tickers) }}
             </div><!-- end col -->
           </div>
         </div> <!-- container -->

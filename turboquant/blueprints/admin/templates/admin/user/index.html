@@ -21,6 +21,17 @@
   {% endif %}
   {% else %}
   {% call f.form_tag('admin.users_bulk_delete') %}
+
+  <div id="bulk_actions" colspan="4">
+    <div class="form-inline">
+      {{ f.field(bulk_form.scope, inline=True) }}
+      <button type="submit"
+              class="btn btn-danger btn-sm">
+        Delete items
+      </button>
+    </div>
+  </div>
+  
   <table class="table table-striped">
     <thead>
       <tr>
@@ -39,15 +50,6 @@
         </th>
         <th class="col-header">
           {{ items.sort('sign_in_count', 'Sign in count') }}
-        </th>
-        <th id="bulk_actions" colspan="4">
-          <div class="form-inline">
-            {{ f.field(bulk_form.scope, inline=True) }}
-            <button type="submit"
-                    class="btn btn-danger btn-sm">
-              Delete items
-            </button>
-          </div>
         </th>
       </tr>
     </thead>
