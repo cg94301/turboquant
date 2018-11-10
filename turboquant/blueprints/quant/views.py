@@ -208,10 +208,10 @@ def tickers_bulk_delete():
 
         print "Deleting IDS:", ids
 
-        flash('{0} user(s) were scheduled to be deleted.'.format(len(ids)),
+        flash('{0} ticker(s) were scheduled to be deleted.'.format(len(ids)),
               'success')
     else:
-        flash('No users were deleted, something went wrong.', 'error')
+        flash('No tickers were deleted, something went wrong.', 'error')
 
     return redirect(url_for('quant.data'))
 

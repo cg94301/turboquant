@@ -78,11 +78,12 @@
               {% call f.form_tag('quant.tickers_bulk_delete') %}
               <div id="bulk_actions" colspan="4">
                 <div class="form-inline">
-                  <button type="submit" name="delete" class="btn btn-danger btn-trans waves-effect waves-light">Delete</button>
                   {{ f.field(bulk_form.scope, inline=True) }}
+                  <button type="submit" name="portfolio" class="btn btn-pink waves-effect waves-light">Portfolio</button>
+                  <button type="submit" name="delete" class="btn btn-danger btn-trans waves-effect waves-light">Delete</button>
                 </div>
               </div>
-              
+
               <table id="datatable" class="table table-striped dt-responsive nowrap">
                 <thead>
                   <tr>
