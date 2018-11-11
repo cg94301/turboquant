@@ -18,7 +18,7 @@ class Strategy(ResourceMixin, db.Model):
                                                   onupdate='CASCADE',
                                                   ondelete='CASCADE'),
                         index=True, nullable=False)
-    
+    portfolio = db.Column(db.Boolean,default=False)
     name = db.Column(db.String(128))
     ticker = db.Column(db.String(128))
     execution_arn = db.Column(db.String(128))
