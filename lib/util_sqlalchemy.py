@@ -76,13 +76,6 @@ class ResourceMixin(object):
             # SQLAlchemy returns back a list of tuples, we want a list of strs.
             ids = [str(item[0]) for item in ids]
 
-        if scope == 'all_items':
-            # Change the scope to go from selected ids to all items.
-            ids = cls.query.with_entities(cls.tid)
-
-            # SQLAlchemy returns back a list of tuples, we want a list of strs.
-            ids = [str(item[0]) for item in ids]            
-            
         # Remove 1 or more items from the list, this could be useful in spots
         # where you may want to protect the current user from deleting themself
         # when bulk deleting user accounts.

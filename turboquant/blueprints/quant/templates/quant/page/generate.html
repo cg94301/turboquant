@@ -76,15 +76,22 @@
                   <div role="tabpanel" class="tab-pane fade in active" id="core">
 
                     <div class="row">
+                        
                       <div class="col-sm-3">
-                        <h4 class="m-t-0 header-title"><b>Number of Trees</b></h4>
-                      </div>                         
-                    
+                        <h4 class="m-t-0 header-title text-turboquant"><b>Learning Rate</b></h4>
+                      </div>
+                        
                       <div class="col-sm-3">                      
                         <div class="form-group">
                           <label for="num-round" class="col-sm-3 control-label">From</label>
                           <div class="col-sm-9">
-                            <input type="text" class="form-control input-sm" id="num-round" value="400" name="num-round-from" placeholder="{{ form.description }}">
+                            <!-- <input type="text" class="form-control" id="num-round" value="100" name="num-round" placeholder="{{ form.description }}"> -->
+                            <select class="form-control input-sm" name="eta-from">
+                              <option>1</option>
+                              <option selected="selected">0.1</option>
+                              <option>0.01</option>
+                              <option>0.001</option>
+                            </select>
                           </div>
                         </div>
                       </div>
@@ -93,27 +100,25 @@
                         <div class="form-group">
                           <label for="max-depth" class="col-sm-3 control-label">To</label>
                           <div class="col-sm-9">
-                            <input type="text" class="form-control input-sm" id="max-depth" value="400" name="num-round-to" placeholder="How deep?">
+                            <!-- <input type="text" class="form-control" id="max-depth" value="3" name="max-depth" placeholder="How deep?"> -->
+                            <select class="form-control input-sm" name="eta-to">
+                              <option>1</option>
+                              <option selected="selected">0.1</option>
+                              <option>0.01</option>
+                              <option>0.001</option>
+                            </select>
                           </div>
                         </div>
                       </div>                      
-                        
-                      <div class="col-sm-3">                      
-                        <div class="form-group">
-                          <label for="eta" class="col-sm-3 control-label">Step</label>
-                          <div class="col-sm-9">
-                            <input type="text" class="form-control input-sm" id="eta" value="100" name="num-round-step" placeholder="How fast?">
-                          </div>
-                        </div>                      
-                      </div>                                 
-                    </div> <!-- row -->
-
+                      
+                    </div> <!-- row -->                    
+                    
                     <hr>
                     
                     <div class="row">
                       
                       <div class="col-sm-3">
-                        <h4 class="m-t-0 header-title"><b>Tree Depth</b></h4>
+                        <h4 class="m-t-0 header-title text-turboquant"><b>Tree Depth</b></h4>
                       </div>                  
                       
                       <div class="col-sm-3">                      
@@ -161,9 +166,46 @@
                     <hr>
                     
                     <div class="row">
+                      <div class="col-sm-3">
+                        <h4 class="m-t-0 header-title text-turboquant"><b>Number of Trees</b></h4>
+                      </div>                         
+                    
+                      <div class="col-sm-3">                      
+                        <div class="form-group">
+                          <label for="num-round" class="col-sm-3 control-label">From</label>
+                          <div class="col-sm-9">
+                            <input type="text" class="form-control input-sm" id="num-round" value="400" name="num-round-from" placeholder="{{ form.description }}">
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="col-sm-3">                      
+                        <div class="form-group">
+                          <label for="max-depth" class="col-sm-3 control-label">To</label>
+                          <div class="col-sm-9">
+                            <input type="text" class="form-control input-sm" id="max-depth" value="400" name="num-round-to" placeholder="How deep?">
+                          </div>
+                        </div>
+                      </div>                      
+                        
+                      <div class="col-sm-3">                      
+                        <div class="form-group">
+                          <label for="eta" class="col-sm-3 control-label">Step</label>
+                          <div class="col-sm-9">
+                            <input type="text" class="form-control input-sm" id="eta" value="100" name="num-round-step" placeholder="How fast?">
+                          </div>
+                        </div>                      
+                      </div>                                 
+                    </div> <!-- row -->
+                    
+                  </div>
+
+                  <div role="tabpanel" class="tab-pane fade" id="advanced">
+
+                    <div class="row">
                         
                       <div class="col-sm-3">
-                        <h4 class="m-t-0 header-title"><b>Learning Rate</b></h4>
+                        <h4 class="m-t-0 header-title text-orange"><b>Advanced 1</b></h4>
                       </div>
                         
                       <div class="col-sm-3">                      
@@ -171,7 +213,7 @@
                           <label for="num-round" class="col-sm-3 control-label">From</label>
                           <div class="col-sm-9">
                             <!-- <input type="text" class="form-control" id="num-round" value="100" name="num-round" placeholder="{{ form.description }}"> -->
-                            <select class="form-control input-sm" name="eta-from">
+                            <select class="form-control input-sm" name="adv1-from">
                               <option>1</option>
                               <option selected="selected">0.1</option>
                               <option>0.01</option>
@@ -186,7 +228,7 @@
                           <label for="max-depth" class="col-sm-3 control-label">To</label>
                           <div class="col-sm-9">
                             <!-- <input type="text" class="form-control" id="max-depth" value="3" name="max-depth" placeholder="How deep?"> -->
-                            <select class="form-control input-sm" name="eta-to">
+                            <select class="form-control input-sm" name="adv1-to">
                               <option>1</option>
                               <option selected="selected">0.1</option>
                               <option>0.01</option>
@@ -196,11 +238,8 @@
                         </div>
                       </div>                      
                       
-                    </div> <!-- row -->
+                    </div> <!-- row -->                                        
                     
-                  </div>
-
-                  <div role="tabpanel" class="tab-pane fade" id="advanced"><p>Lorem Ipsum</p>
                   </div>
                 </div> <!-- tabcontent -->
               </div> <!-- cardbox -->

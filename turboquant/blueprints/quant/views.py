@@ -8,7 +8,7 @@ from flask import (
 from flask_login import login_required, current_user
 from sqlalchemy import text
 
-from turboquant.blueprints.quant.forms import XGBForm, BulkDeleteForm
+from turboquant.blueprints.quant.forms import XGBForm, BulkDeleteForm, SearchForm
 from turboquant.blueprints.quant.models import Strategy, Ticker
 from turboquant.extensions import db
 from flask_wtf import Form
@@ -75,7 +75,7 @@ def data(page):
     
     # Use basic form for CSRF token
     form = Form()
-    
+    search_form = SearchForm()  
     bulk_form = BulkDeleteForm()
 
     sort_by = Ticker.sort_by(request.args.get('sort', 'created_on'),
@@ -85,6 +85,7 @@ def data(page):
                     
     paginated_tickers = Ticker.query \
                               .filter(Ticker.user_id == current_user.id) \
+                              .filter(Ticker.search(request.args.get('q', ''))) \
                               .order_by(text(order_values)) \
                               .paginate(page, 2, True) 
             
@@ -196,17 +197,31 @@ def tickers_bulk_delete():
     form = BulkDeleteForm()
 
     if form.validate_on_submit():
-        ids = Ticker.get_bulk_action_ids(request.form.get('scope'),
-                                       request.form.getlist('bulk_ids'),
-                                       omit_ids=[current_user.id],
-                                       query=request.args.get('q', ''))
 
-        ## Prevent circular imports.
-        #from turboquant.blueprints.billing.tasks import delete_users
-        ## sqlalchemy bulk delete
-        #delete_users.delay(ids)
+        if request.form.get('scope') == 'all_items':
+            
+            ids = Ticker.query.with_entities(Ticker.tid).filter(Ticker.user_id == current_user.id).all()
+            # SQLAlchemy returns back a list of tuples, we want a list of strs.
+            ids = [str(item[0]) for item in ids] 
 
-        print "Deleting IDS:", ids
+        else:
+            ids = request.form.getlist('bulk_ids')        
+        
+        if 'skip' in request.form:
+            print "Skip IDS:", ids
+            
+            tickersq = Ticker.query.filter(Ticker.user_id == current_user.id)
+            for id in ids:
+                x = tickersq.filter(Ticker.tid==id).first()
+                if request.form.get('scope') == 'all_items':
+                    x.skip = False
+                else:
+                    x.skip = not x.skip
+                print "x",x
+            db.session.commit()
+
+        if 'delete' in request.form:
+            print "Deleting IDS:", ids        
 
         flash('{0} ticker(s) were scheduled to be deleted.'.format(len(ids)),
               'success')
@@ -215,6 +230,54 @@ def tickers_bulk_delete():
 
     return redirect(url_for('quant.data'))
 
+
+@quant.route('/quant/bulk_strategies', methods=['POST'])
+def strategies_bulk_delete():
+    
+    form = BulkDeleteForm()
+
+    if form.validate_on_submit():
+        #ids = Strategy.get_bulk_action_ids_quant(current_user.id,
+        #                                         request.form.get('scope'),
+        #                                         request.form.getlist('bulk_ids'),
+        #                                         'name')
+
+        ## Prevent circular imports.
+        #from turboquant.blueprints.billing.tasks import delete_users
+        ## sqlalchemy bulk delete
+        #delete_users.delay(ids)
+        
+        if request.form.get('scope') == 'all_items':
+            
+            ids = Strategy.query.with_entities(Strategy.name).filter(Strategy.user_id == current_user.id).all()
+            # SQLAlchemy returns back a list of tuples, we want a list of strs.
+            ids = [str(item[0]) for item in ids] 
+
+        else:
+            ids = request.form.getlist('bulk_ids')
+
+        if 'portfolio' in request.form:
+            print "Portfolio IDS:", ids
+            
+            strategiesq = Strategy.query.filter(Strategy.user_id == current_user.id)
+            for id in ids:
+                x = strategiesq.filter(Strategy.name==id).first()
+                if request.form.get('scope') == 'all_items':
+                    x.portfolio = False
+                else:
+                    x.portfolio = not x.portfolio
+                print "x",x
+            db.session.commit()
+
+        if 'delete' in request.form:
+            print "Deleting IDS:", ids
+
+        flash('{0} strategies were scheduled to be deleted.'.format(len(ids)),
+              'success')
+    else:
+        flash('No strategies were deleted, something went wrong.', 'error')
+
+    return redirect(url_for('quant.strategies'))
 
 @quant.route('/generate/', methods=['GET','POST'])
 def generate():
@@ -355,9 +418,12 @@ def strategies(page):
 
 
             db.session.commit()
-    
+            
+    search_form = SearchForm()    
     bulk_form = BulkDeleteForm()
 
+    print "request:",request.args.keys()
+    
     sort_by = Strategy.sort_by(request.args.get('sort', 'created_on'),
                            request.args.get('direction', 'desc'))
     
@@ -365,7 +431,16 @@ def strategies(page):
     
     paginated_strategies = Strategy.query \
         .filter(Strategy.user_id == current_user.id) \
+        .filter(Strategy.search(request.args.get('q', ''))) \
         .order_by(text(order_values)) \
         .paginate(page, 20, True)
 
     return render_template('quant/page/strategies.html', strategies=paginated_strategies, form=form, bulk_form=bulk_form)
+
+
+@quant.route('/portfolio/', methods=['GET','POST'])
+def portfolio():
+
+    form = Form()
+    
+    return render_template('quant/page/portfolio.html', form=form)

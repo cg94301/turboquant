@@ -18,7 +18,7 @@
 {% import 'macros/items.html' as items %}
 {% extends 'layouts/app.html' %}
 
-{% block title %}Strategies{% endblock %}
+{% block title %}Portfolio{% endblock %}
 
 {% block body %}
 <!-- <body class="fixed-left"> -->
@@ -41,7 +41,7 @@
 
           <div class="row">
             <div class="col-sm-12">
-              <h4 class="page-title">Strategies</h4>
+              <h4 class="page-title">Portfolio</h4>
             </div>
           </div>
 
@@ -57,133 +57,18 @@
           
           <div class="row">
             <form action="{{ url_for('quant.strategies') }}" method="post">            
-              <div class="col-sm-8 card-box">
+              <div class="col-sm-12 card-box">
                 {{ form.hidden_tag() }}
-                <button type="submit" name="update" class="btn btn-custom waves-effect w-md waves-light">Retrieve Strategies <span><i class="fa fa-cloud-download"></i></span></button>
-              </div>
-              <div class="col-sm-4 card-box">
-                <button type="submit" name="terminate" class="btn btn-danger btn-trans waves-effect w-md waves-light">Terminate Jobs</button>
+                <button type="submit" name="update" class="btn btn-custom waves-effect w-md waves-light">Backtest</button>
               </div>
             </form>
           </div>
           
           <div class="row">
             <div class="col-sm-12 card-box table-responsive">
-              <!-- <div class="card-box table-responsive"> -->
 
-              {{ f.search('quant.strategies') }}
+              <p>graph</p>
               
-              {% call f.form_tag('quant.strategies_bulk_delete') %}
-              <div id="bulk_actions" colspan="4">
-                <div class="form-inline">
-                  {{ f.field(bulk_form.scope, inline=True) }}
-                  <button type="submit" name="portfolio" class="btn btn-info waves-effect waves-light">Portfolio</button>
-                  <button type="submit" name="delete" class="btn btn-danger btn-trans waves-effect waves-light">Delete</button>
-                </div>
-              </div>              
-              
-              <table id="datatable" class="table table-striped dt-responsive nowrap">
-                <thead>
-                  <tr>
-                    <!-- <th>created_on</th> -->
-                    <!-- <th>id</th> -->
-                    <th>
-                      <label for="select_all"></label>
-                      <input id="select_all" name="select_all" type="checkbox">
-                    </th>                    
-                    <th  class="col-header">
-                      {{ items.sort('strategy','strategy') }}
-                    </th>
-                    <th  class="col-header">
-                      {{ items.sort('portfolio','portfolio') }}
-                    </th>
-                    <th  class="col-header">
-                      {{ items.sort('status','status') }}
-                    </th>
-                    <th  class="col-header">
-                      {{ items.sort('ticker','ticker') }}
-                    </th>                    
-                    <th class="col-header">
-                      {{ items.sort('auc','auc') }}
-                    </th>
-                    <th class="col-header">
-                      {{ items.sort('precision','precision') }}
-                    </th>
-                    <th class="col-header">
-                      {{ items.sort('recall','recall') }}
-                    </th>
-                    <th class="col-header">
-                      {{ items.sort('sharpe','sharpe') }}
-                    </th>
-                  </tr>
-                </thead>
-                
-                <tbody>
-                  {% for strategy in strategies.items %}
-                  <tr>
-                    <!-- <td>
-                         <time data-datetime="{{ strategy.created_on }}">
-                           {{ strategy.created_on }}
-                    </td> -->
-                    <!-- <td>
-                         {{ strategy.id }}
-                         </td> -->
-                    <td>
-                      <label for="bulk_ids"></label>
-                      <input class="checkbox-item" id="bulk_ids" name="bulk_ids"
-                             type="checkbox" value="{{ strategy.name }}">
-                    </td>                    
-                    <td>
-                      {{ strategy.name }}
-                    </td>
-                    <td>
-                      {% if strategy.portfolio == True %}
-                      <span class="label label-info">SELECTED</span>
-                      {% else %}
-                      <!-- <span class="label label-inverse">UNSELECTED</span> -->
-                      {% endif %}
-                    </td>                     
-                    <td>
-                      <!-- 'PENDING'|RUNNING'|'SUCCEEDED'|'FAILED'|'TIMED_OUT'|'ABORTED' -->
-                      <!--   primary   info     success     danger    pink       warning -->
-                      {% if strategy.status == 'PENDING' %}
-                      <span class="label label-purple"> {{ strategy.status }} </span>
-                      {% elif strategy.status == 'RUNNING' %}
-                      <span class="label label-orange"> {{ strategy.status }} </span>
-                      {% elif strategy.status == 'SUCCEEDED' %}
-                      <span class="label label-success"> {{ strategy.status }} </span>
-                      {% elif strategy.status == 'FAILED' %}
-                      <span class="label label-danger"> {{ strategy.status }} </span>
-                      {% elif strategy.status == 'TIMED_OUT' %}
-                      <span class="label label-danger"> {{ strategy.status }} </span>
-                      {% elif strategy.status == 'ABORTED' %}
-                      <span class="label label-pink"> {{ strategy.status }} </span>
-                      {% else %}
-                      <span class="label label-inverse"> {{ strategy.status }} </span>
-                      {% endif %}
-                    </td>
-                    <td>
-                      {{ strategy.ticker }}
-                    </td>                    
-                    <td>
-                      {{ strategy.auc }}
-                    </td>
-                    <td>
-                      {{ strategy.precision }}
-                    </td>
-                    <td>
-                      {{ strategy.recall }}
-                    </td>
-                    <td>
-                      {{ strategy.sharpe }}
-                    </td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-              {% endcall %}
-              {{ items.paginate(strategies) }}
-              <!-- </div> -->
             </div><!-- end col -->
           </div>
           <!-- end row -->

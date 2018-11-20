@@ -1,4 +1,4 @@
-from sqlalchemy import func
+from sqlalchemy import func, or_
 
 #from turboquant.blueprints.user.models import User
 from turboquant.blueprints.billing.models.subscription import Subscription
@@ -32,6 +32,25 @@ class Strategy(ResourceMixin, db.Model):
         # CAll Flask-SQLAlchemy's constructor.
         super(Strategy, self).__init__(**kwargs)
 
+    @classmethod
+    def search(cls, query):
+        """
+        Search a resource by 1 or more fields.
+
+        :param query: Search query
+        :type query: str
+        :return: SQLAlchemy filter
+        """
+        if not query:
+            return ''
+
+        search_query = '%{0}%'.format(query)
+        search_chain = (Strategy.name.ilike(search_query),
+                        Strategy.status.ilike(search_query),
+                        Strategy.ticker.ilike(search_query))
+
+        return or_(*search_chain)
+    
         
 class Ticker(ResourceMixin, db.Model):
     __tablename__ = 'tickers'
@@ -50,7 +69,24 @@ class Ticker(ResourceMixin, db.Model):
     def __init__(self, **kwargs):
         # CAll Flask-SQLAlchemy's constructor.
         super(Ticker, self).__init__(**kwargs)
-        
+
+    @classmethod
+    def search(cls, query):
+        """
+        Search a resource by 1 or more fields.
+
+        :param query: Search query
+        :type query: str
+        :return: SQLAlchemy filter
+        """
+        if not query:
+            return ''
+
+        search_query = '%{0}%'.format(query)
+        search_chain = (Ticker.tid.ilike(search_query))
+
+        return or_(search_chain)
+    
 #class Dashboard(object):
 #    @classmethod
 #    def group_and_count_users(cls):

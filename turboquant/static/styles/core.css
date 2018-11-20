@@ -581,6 +581,13 @@ a:focus {
 .text-dark {
   color: #797979 !important;
 }
+.text-turboquant {
+    color: #2dd7ff !important;
+}
+.text-orange {
+    color: #ff9900;
+}
+
 /* Form components */
 textarea.form-control {
   min-height: 90px;
