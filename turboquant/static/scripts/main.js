@@ -376,6 +376,131 @@ var bets = function () {
     });
 };
 
+// Placing bets.
+var equity = function () {
+    console.log('equity triggered')
+    //var guessSelector = '#guess';
+    //var wageredSelector = '#wagered';
+    //var recentBetsSelector = '#recent_bets';
+    //var $userCoins = $('#user_coins');
+    //var $outcomeStatus = $('#outcome');
+    //var $spinner = $('.spinner');
+    //var $form = $('#place_bet');
+
+    var getEquity = function (csrfToken) {
+        console.log('Triggered getEquity')
+        console.log(csrfToken)
+        return $.ajax({
+            type: 'GET',
+            url: '/quant/portfolio/data',
+            dataType: 'json',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-CSRFToken', csrfToken);
+                //return $outcomeStatus.text('')
+                //    .removeClass('alert-success alert-warning alert-error').hide();
+            }
+        }).done(function (data, status, xhr) {
+            console.log(data);
+
+            function unpack(rows, key) {
+                return rows.map(function(row) { return row[key]; });
+            }
+            
+            console.log(unpack(data.equity, 'equity'));
+
+            var parseTime = d3.timeParse("%Y%m%d");
+            function unpacktime(rows, key) {
+                return rows.map(function(row) { return   d3.timeFormat('%Y-%m-%d')(parseTime(row[key])); });
+            }
+
+            console.log(unpacktime(data.equity, 'date'));
+
+            var parseTime = d3.timeParse("%B %d, %Y");
+            console.log(parseTime("June 30, 2015"));
+
+            var parseTime = d3.timeParse("%Y%m%d");
+            console.log(parseTime(20170101));            
+            
+            var trace0 = {
+                type: "scatter",
+                mode: "lines",
+                name: '#Tests',
+                x: unpacktime(data.equity, 'date'),
+                y: unpack(data.equity, 'equity'),
+                line: {color: '#2dd7ff'}
+            }            
+
+            var eqdata = [trace0];
+
+            var layout = {
+                title: 'Equity Curve',
+                xaxis: {
+                    autorange: true,
+                    //range: ['2001-01-01', '2010-01-01'],
+                    rangeselector: {buttons: [
+                        {
+                            count: 1,
+                            label: '1m',
+                            step: 'month',
+                            stepmode: 'backward'
+                        },
+                        {
+                            count: 6,
+                            label: '6m',
+                            step: 'month',
+                            stepmode: 'backward'
+                        },
+                        {step: 'all'}
+                    ]},
+                    //rangeslider: {visible: true, range: ['2002-02-17', '2007-02-16']},
+                    rangeslider: {visible: true},
+                    type: 'date'
+                },
+                yaxis: {
+                    autorange: true
+                }
+            };
+
+            Plotly.newPlot('equitygraph', eqdata, layout, {displayModeBar: false, responsive: true});
+
+            
+            //var parsed_data = xhr.responseJSON.data;
+            //return $outcomeStatus.addClass('alert alert-info alert-small').html(status_class);
+        }).fail(function (xhr, status, error) {
+            console.log("ERROR equity");
+            //var status_class = 'alert-error';
+            //var error_status = 'You are out of coins. You should buy more.';
+
+            //if (xhr.responseJSON) {
+            //    error_status = xhr.responseJSON.error;
+            //} else if (error == 'TOO MANY REQUESTS') {
+            //    error_status = 'You have been temporarily rate limited.';
+            //}
+
+            return $outcomeStatus.addClass(status_class).text(error_status);
+        }).always(function (xhr, status, error) {
+            //$spinner.hide();
+            //$form.find('button').prop('disabled', false);
+
+            //$outcomeStatus.show();
+            return xhr;
+        });
+    };
+
+    jQuery(function ($) {
+        var csrfToken = $('meta[name=csrf-token]').attr('content');
+
+        $('body').on('submit', '#equityform', function () {
+            //$spinner.show();
+            //$form.find('button').prop('disabled', true);
+
+            getEquity(csrfToken);
+
+            return false;
+        });
+    });
+};
+
 
 // Initialize everything when the browser is ready.
 $(document).ready(function() {
@@ -386,5 +511,6 @@ $(document).ready(function() {
     stripe('#subscription_form');
     stripe('#payment_form');
     bets();
+    equity();
 });
 

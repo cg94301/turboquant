@@ -56,20 +56,21 @@
           </div>
           
           <div class="row">
-            <form action="{{ url_for('quant.strategies') }}" method="post">            
+            <form action="{{ url_for('quant.portfolio') }}" method="post">            
               <div class="col-sm-12 card-box">
                 {{ form.hidden_tag() }}
-                <button type="submit" name="update" class="btn btn-custom waves-effect w-md waves-light">Backtest</button>
+                <button type="submit" name="backtest" class="btn btn-custom waves-effect w-md waves-light">Backtest</button>
               </div>
             </form>
           </div>
           
           <div class="row">
-            <div class="col-sm-12 card-box table-responsive">
-
-              <p>graph</p>
-              
-            </div><!-- end col -->
+            <div class="col-sm-12 card-box">
+              <form id="equityform">
+                <button type="submit" class="btn btn-custom waves-effect w-md waves-light">Plot</button>
+              </form>
+            </div>
+            <div id="equitygraph"></div>
           </div>
           <!-- end row -->
         </div> <!-- container -->

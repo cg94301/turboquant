@@ -4,7 +4,8 @@ from flask import (
     request,
     flash,
     url_for,
-    render_template)
+    render_template,
+    jsonify)
 from flask_login import login_required, current_user
 from sqlalchemy import text
 
@@ -14,7 +15,7 @@ from turboquant.extensions import db
 from flask_wtf import Form
 
 from werkzeug.utils import secure_filename
-import boto3,json
+import boto3,json,csv
 
 quant = Blueprint('quant', __name__,
                   template_folder='templates', url_prefix='/quant')
@@ -442,5 +443,34 @@ def strategies(page):
 def portfolio():
 
     form = Form()
+    uid = current_user.id
     
+    if request.method == 'POST':
+
+        if 'backtest' in request.form:
+            print "backtest"
+
+            # Download file from S3.
+            s3.download_file(S3_BUCKET, 'u' + str(uid) + '/data/equity.csv', '/tmp/equity.' + str(uid) + '.csv')
+            
+
+                    
     return render_template('quant/page/portfolio.html', form=form)
+
+
+@quant.route('/portfolio/data', methods=['GET'])
+def portfolio_data():
+    # Read CSV equity file into list of dict.
+    equity=[]
+    uid = current_user.id
+    with open('/tmp/equity.' + str(uid) + '.csv') as csvfile:
+        reader = csv.DictReader(csvfile)
+        #print type(reader)
+        #print reader
+        for row in reader:
+            #print(row['date'], row['equity'])
+            equity.append({"date":row['date'], "equity":row['equity']})
+            
+            #print "equity:", equity
+
+    return jsonify({"equity":equity})
