@@ -59,7 +59,69 @@
             <form action="{{ url_for('quant.portfolio') }}" method="post">            
               <div class="col-sm-12 card-box">
                 {{ form.hidden_tag() }}
-                <button type="submit" name="backtest" class="btn btn-custom waves-effect w-md waves-light">Backtest</button>
+                <div>
+                  <button type="submit" name="backtest" class="btn btn-custom waves-effect w-md waves-light">Backtest</button>
+                </div>
+              </div>
+              <div class="col-sm-12 card-box">
+                <div class="col-sm-6">
+                  <table class="table table-striped dt-responsive nowrap">
+                    <tbody>
+                      <tr>
+                        <td><b><span class="m-t-0 header-title text-turboquant">Sharpe</span></b></td>
+                        <td><b>{{ statsd.fin.sharpe }}</b></td>
+                      </tr>
+                      <tr>
+                        <td><b><span class="m-t-0 header-title text-turboquant">Sortino</span></b></td>
+                        <td><b>{{ statsd.fin.sortino }}</b></td>
+                      </tr>
+                      <tr>
+                        <td><b><span class="m-t-0 header-title text-turboquant">MAR</span></b></td>
+                        <td><b>{{ statsd.fin.mar }}</b></td>
+                      </tr>
+                      <tr>
+                        <td><b><span class="m-t-0 header-title text-turboquant">Yearly Return</span></b></td>
+                        <td><b>{{ statsd.fin.returnYearly }}</b></td>
+                      </tr>
+                      <tr>
+                        <td><b><span class="m-t-0 header-title text-turboquant">Yearly Volatility</span></b></td>
+                        <td><b>{{ statsd.fin.volaYearly }}</b></td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                </div>
+                <div class="col-sm-6">
+                  <table class="table table-striped dt-responsive nowrap">
+                    <tbody>
+                      <tr>
+                        <td><b><span class="m-t-0 header-title text-turboquant">Max Drawdown</span></b></td>
+                        <td><b>{{ statsd.fin.maxDD }}</b></td>
+                      </tr>
+                      <tr>
+                        <td><b><span class="m-t-0 header-title text-turboquant">Max Drawdown Begin</span></b></td>
+                        <td><b>{{ statsd.fin.maxDDBegin }}</b></td>
+                      </tr>
+                      <tr>
+                        <td><b><span class="m-t-0 header-title text-turboquant">Max Drawdown End</span></b></td>
+                        <td><b>{{ statsd.fin.maxDDEnd }}</b></td>
+                      </tr>
+                      <tr>
+                        <td><b><span class="m-t-0 header-title text-turboquant">Max Time Off Peak</span></b></td>
+                        <td><b>{{ statsd.fin.maxTimeOffPeak }}</b></td>
+                      </tr>
+                      <tr>
+                        <td><b><span class="m-t-0 header-title text-turboquant">Max Time Off Peak Begin</span></b></td>
+                        <td><b>{{ statsd.fin.maxTimeOffPeakBegin }}</b></td>
+                      </tr>
+                      <tr>
+                        <td><b><span class="m-t-0 header-title text-turboquant">Max Time Off Peak End</span></b></td>
+                        <td><b>{{ statsd.fin.maxTimeOffPeakEnd }}</b></td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                </div>                
               </div>
             </form>
           </div>

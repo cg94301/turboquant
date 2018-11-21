@@ -52,6 +52,30 @@ def launch_xgb_job(id, num_round, max_depth, eta):
     return {}
 
 @celery.task()
+def launch_backtest(uid):
+
+    client = boto3.client('lambda')
+    
+    selectedq = Strategy.query.filter(and_(Strategy.user_id == uid, Strategy.portfolio == True)).all()
+
+    selected = [(t.ticker,t.name) for t in selectedq]
+    #print "portfolio strategies:", selected
+
+    params = {"uid":uid, "portfolio":dict(selected)}
+
+    print "params:",params
+    payload = json.dumps(params)
+    payloadb = str.encode(payload)
+
+    response = client.invoke(
+        FunctionName='arn:aws:lambda:us-west-2:188444798703:function:portfolio',
+        Payload=payloadb,
+    )
+
+    rs = response['Payload']
+    print "stats:",rs
+    
+@celery.task()
 def launch_batch_job(uid,params):
 
     # ML params

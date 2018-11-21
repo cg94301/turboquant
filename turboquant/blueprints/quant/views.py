@@ -7,7 +7,7 @@ from flask import (
     render_template,
     jsonify)
 from flask_login import login_required, current_user
-from sqlalchemy import text
+from sqlalchemy import text,and_
 
 from turboquant.blueprints.quant.forms import XGBForm, BulkDeleteForm, SearchForm
 from turboquant.blueprints.quant.models import Strategy, Ticker
@@ -444,18 +444,50 @@ def portfolio():
 
     form = Form()
     uid = current_user.id
+    # Use DB instead of this workaround for stats.
+    statsd = {'fin':{'sharpe':'_','mar':'_','sortino':'_','volaYearly':'_','maxDD':'_','returnYearly':'_','maxDDEnd':'_',
+                     'maxTimeOffPeakBegin':'_','maxTimeOffPeakEnd':'_','maxDDBegin':'_','maxTimeOffPeak':'_'}}
     
     if request.method == 'POST':
 
         if 'backtest' in request.form:
             print "backtest"
 
+            from turboquant.blueprints.quant.tasks import launch_backtest
+
+            # Launch backtest.
+            # {
+            #   "uid":204, "portfolio": {"SBUX":"204-0uvd0q69wq","AAPL":"204-ywliaf9tp0"}
+            # }
+            #task = launch_backtest(current_user.id)            
+
+            selectedq = Strategy.query.filter(and_(Strategy.user_id == uid, Strategy.portfolio == True)).all()
+
+            selected = [(t.ticker,t.name) for t in selectedq]
+            #print "portfolio strategies:", selected
+
+            params = {"uid":uid, "portfolio":dict(selected)}
+
+            print "params:",params
+            payload = json.dumps(params)
+            payloadb = str.encode(payload)
+
+            response = client.invoke(
+                FunctionName='arn:aws:lambda:us-west-2:188444798703:function:portfolio',
+                Payload=payloadb,
+            )
+
+            stats = response['Payload'].read()
+            statsd = json.loads(stats)
+            print type(statsd)
+            print "stats:", statsd
+            
             # Download file from S3.
             s3.download_file(S3_BUCKET, 'u' + str(uid) + '/data/equity.csv', '/tmp/equity.' + str(uid) + '.csv')
             
 
                     
-    return render_template('quant/page/portfolio.html', form=form)
+    return render_template('quant/page/portfolio.html', form=form, statsd=statsd)
 
 
 @quant.route('/portfolio/data', methods=['GET'])
