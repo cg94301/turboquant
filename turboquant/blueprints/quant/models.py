@@ -86,6 +86,31 @@ class Ticker(ResourceMixin, db.Model):
         search_chain = (Ticker.tid.ilike(search_query))
 
         return or_(search_chain)
+
+class Portfolio(ResourceMixin, db.Model):
+    __tablename__ = 'portfolios'
+    id = db.Column(db.Integer, primary_key=True)
+
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id',
+                                                  onupdate='CASCADE',
+                                                  ondelete='CASCADE'),
+                        index=True, nullable=False)
+    
+    sharpe = db.Column(db.Float(32))
+    sortino = db.Column(db.Float(32))
+    mar = db.Column(db.Float(32))
+    returnYearly = db.Column(db.Float(32))
+    volaYearly = db.Column(db.Float(32))
+    maxDD = db.Column(db.Float(32))
+    maxDDBegin = db.Column(db.Integer())
+    maxDDEnd = db.Column(db.Integer())
+    maxTimeOffPeak = db.Column(db.Integer())
+    maxTimeOffPeakBegin = db.Column(db.Integer())
+    maxTimeOffPeakEnd = db.Column(db.Integer())
+    
+    def __init__(self, **kwargs):
+        # CAll Flask-SQLAlchemy's constructor.
+        super(Portfolio, self).__init__(**kwargs)    
     
 #class Dashboard(object):
 #    @classmethod

@@ -139,7 +139,7 @@ File: Menu
   top: 0;
   width: 180px;
   z-index: 2;
-  background: #f5f5f5; /* #253138; */
+  background: #fefefe; /* #f5f5f5; #253138; */
 }
 .side-menu.left {
   box-shadow: 0 8px 42px 0 rgba(0, 0, 0, 0.08);
@@ -197,7 +197,7 @@ div.fixed-left .side-menu.left {
   text-align: center;
 }
 #sidebar-menu .waves-effect .waves-ripple {
-  background-color: rgba(0, 221, 153, 0.45); /* rgba(254, 98, 113, 0.45) */
+  background-color: rgba(45, 215, 255, 0.45); /* rgba(254, 98, 113, 0.45) */
 }
 #sidebar-menu .nav > li > a .badge {
   position: absolute;
@@ -266,7 +266,7 @@ div.fixed-left .side-menu.left {
   margin: 3px 0 0 0;
 }
 #sidebar-menu > ul > li > a.active {
-    color: #00dd99 !important;
+    color: #2dd7ff !important;
     /* color: rgba(45, 215, 255, 1) !important; */
 }
 .menu-title {
@@ -333,7 +333,7 @@ div.fixed-left .side-menu.left {
   z-index: 6;
 }
 #wrapper.enlarged .left.side-menu #sidebar-menu ul > li:hover > ul a:hover {
-  color: #00dd99;
+  color: #2dd7ff;
 }
 #wrapper.enlarged .left.side-menu #sidebar-menu ul > li:hover a span {
   display: inline;
@@ -357,10 +357,10 @@ div.fixed-left .side-menu.left {
   transform: rotate(270deg);
 }
 #wrapper.enlarged .left.side-menu #sidebar-menu ul ul li.active a {
-  color: #00dd99;
+  color: #2dd7ff;
 }
 #wrapper.enlarged .left.side-menu #sidebar-menu ul ul a:hover {
-  color: #00dd99 !important;
+  color: #2dd7ff !important;
 }
 #wrapper.enlarged .left.side-menu #sidebar-menu ul > li > a span {
   display: none;

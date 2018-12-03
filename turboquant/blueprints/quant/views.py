@@ -10,7 +10,7 @@ from flask_login import login_required, current_user
 from sqlalchemy import text,and_
 
 from turboquant.blueprints.quant.forms import XGBForm, BulkDeleteForm, SearchForm
-from turboquant.blueprints.quant.models import Strategy, Ticker
+from turboquant.blueprints.quant.models import Strategy, Ticker, Portfolio
 from turboquant.extensions import db
 from flask_wtf import Form
 
@@ -444,9 +444,6 @@ def portfolio():
 
     form = Form()
     uid = current_user.id
-    # Use DB instead of this workaround for stats.
-    statsd = {'fin':{'sharpe':'_','mar':'_','sortino':'_','volaYearly':'_','maxDD':'_','returnYearly':'_','maxDDEnd':'_',
-                     'maxTimeOffPeakBegin':'_','maxTimeOffPeakEnd':'_','maxDDBegin':'_','maxTimeOffPeak':'_'}}
     
     if request.method == 'POST':
 
@@ -481,13 +478,48 @@ def portfolio():
             statsd = json.loads(stats)
             print type(statsd)
             print "stats:", statsd
+            find = statsd['fin']
             
-            # Download file from S3.
-            s3.download_file(S3_BUCKET, 'u' + str(uid) + '/data/equity.csv', '/tmp/equity.' + str(uid) + '.csv')
-            
+            # Update Portfolio DB with stats if entry exists.
+            # Otherwise create new entry.
+            portfolio = Portfolio.query.filter(Portfolio.user_id == current_user.id).first()
+            print "portfolio post db:", portfolio
+            if portfolio:
+                portfolio.sharpe = find['sharpe']
+                portfolio.sortino = find['sortino']
+                portfolio.mar = find['mar']
+                portfolio.returnYearly = find['returnYearly']
+                portfolio.volaYearly = find['volaYearly']
+                portfolio.maxDD = find['maxDD']
+                portfolio.maxDDBegin = find['maxDDBegin']
+                portfolio.maxDDEnd = find['maxDDEnd']
+                portfolio.maxTimeOffPeak = find['maxTimeOffPeak']
+                portfolio.maxTimeOffPeakBegin = find['maxTimeOffPeakBegin']
+                portfolio.maxTimeOffPeakEnd = find['maxTimeOffPeakEnd']
+            else:
+                p = Portfolio(user_id=current_user.id,
+                              sharpe=find['sharpe'],
+                              sortino=find['sortino'],
+                              mar=find['mar'],
+                              returnYearly=find['returnYearly'],
+                              volaYearly=find['volaYearly'],
+                              maxDD=find['maxDD'],
+                              maxDDBegin=find['maxDDBegin'],
+                              maxDDEnd=find['maxDDEnd'],
+                              maxTimeOffPeak=find['maxTimeOffPeak'],
+                              maxTimeOffPeakBegin=find['maxTimeOffPeakBegin'],
+                              maxTimeOffPeakEnd=find['maxTimeOffPeakEnd'])
+                db.session.add(p)
 
+            db.session.commit()
+            
+            
+    # Query portfolio
+    portfolio = Portfolio.query.filter(Portfolio.user_id == current_user.id).first()
+    print type(portfolio)
+    print "portfolio db:", portfolio
                     
-    return render_template('quant/page/portfolio.html', form=form, statsd=statsd)
+    return render_template('quant/page/portfolio.html', form=form, portfolio=portfolio)
 
 
 @quant.route('/portfolio/data', methods=['GET'])
@@ -495,6 +527,10 @@ def portfolio_data():
     # Read CSV equity file into list of dict.
     equity=[]
     uid = current_user.id
+
+    # Download equity curve file from S3.
+    s3.download_file(S3_BUCKET, 'u' + str(uid) + '/data/equity.csv', '/tmp/equity.' + str(uid) + '.csv')    
+    
     with open('/tmp/equity.' + str(uid) + '.csv') as csvfile:
         reader = csv.DictReader(csvfile)
         #print type(reader)

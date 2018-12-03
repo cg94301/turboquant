@@ -20,6 +20,13 @@ File: Core
 /* =============
    Common
 ============= */
+/* custom color choices:
+
+   original:
+   green: #00dd99 rgb(0,221,153)
+   TQ blue: #2dd7ff rgb(45,215,255)
+
+*/
 body {
   /* background: #f5f5f5; */
   font-family: 'Arimo', sans-serif;
@@ -463,12 +470,12 @@ a:focus {
 .nav-pills-custom li a {
   padding: 5px 18px;
   border-radius: 20px;
-  color: #00dd99 !important;
+  color: #2dd7ff !important;
   line-height: 28px !important;
 }
 .nav-pills-custom li.active a {
   background-color: #ffffff !important;
-  color: #00dd99 !important;
+  color: #2dd7ff !important;
 }
 .breadcrumb {
   background-color: transparent;
@@ -491,7 +498,7 @@ a:focus {
 }
 .dropdown-menu > li > a:focus,
 .dropdown-menu > li > a:hover {
-  background-color: #00dd99 !important;
+  background-color: #2dd7ff !important;
   color: #ffffff;
 }
 .dropdown-menu > .active > a,
@@ -509,7 +516,7 @@ a:focus {
 }
 /* Background colors */
 .bg-custom {
-  background-color: rgba(0, 221, 153, 0.75) !important; /* rgba(254, 98, 113, 0.75) */
+  background-color: rgba(45, 215, 255, 0.75) !important; /* rgba(254, 98, 113, 0.75) */
 }
 .bg-primary {
   background-color: rgba(70, 103, 204, 0.75) !important;
@@ -546,7 +553,7 @@ a:focus {
 }
 /* Text colors */
 .text-custom {
-  color: #00dd99 !important;
+  color: #2dd7ff !important;
 }
 .text-white {
   color: #ffffff !important;
@@ -582,7 +589,7 @@ a:focus {
   color: #797979 !important;
 }
 .text-turboquant {
-    color: #2dd7ff !important;
+    color: #4667cc !important; /* #2dd7ff */
 }
 .text-orange {
     color: #ff9900;
@@ -673,7 +680,7 @@ select.form-control {
   padding: .3em .6em .3em;
 }
 .label-default {
-  background-color: #00dd99;
+  background-color: #2dd7ff;
 }
 .label-primary {
   background-color: #4667cc;
@@ -702,6 +709,10 @@ select.form-control {
 .label-inverse {
   background-color: #60667a;
 }
+.label-custom {
+  background-color: #2dd7ff;
+}
+
 /* Badge */
 .badge {
   text-transform: uppercase;
@@ -709,7 +720,7 @@ select.form-control {
   padding: 3px 5px;
   font-size: 12px;
   margin-top: 1px;
-  background-color: #00dd99;
+  background-color: #2dd7ff;
 }
 .badge-xs {
   font-size: 9px;
@@ -786,8 +797,8 @@ select.form-control {
 .pagination > .active > span:hover,
 .pagination > .active > a:focus,
 .pagination > .active > span:focus {
-  background-color: #00dd99;
-  border-color: #00dd99;
+  background-color: #2dd7ff;
+  border-color: #2dd7ff;
 }
 .pager li > a,
 .pager li > span {
@@ -965,7 +976,7 @@ select.form-control {
   padding: 15px 25px 15px 25px;
   line-height: 22px;
   font-size: 18px;
-  background-color: #00dd99;
+  background-color: #2dd7ff;
   color: #ffffff;
   text-align: left;
   margin: 0px;
@@ -996,7 +1007,7 @@ select.form-control {
   background-color: rgba(154, 157, 160, 0.1);
 }
 .nav-pills > .active > a > .badge {
-  color: #00dd99;
+  color: #2dd7ff;
 }
 .has-success .form-control {
   border-color: #3ec845;
@@ -1038,13 +1049,13 @@ select.form-control {
 }
 .popover .popover-title {
   background-color: transparent;
-  color: #00dd99;
+  color: #2dd7ff;
   font-weight: 500;
   font-size: 15px;
 }
 /* Code */
 code {
-  color: #00dd99;
+  color: #2dd7ff;
   background-color: #ffffff;
   border-radius: 4px;
 }
@@ -1205,7 +1216,7 @@ pre {
   background-color: rgba(255, 255, 255, 0.4);
 }
 .waves-effect.waves-custom .waves-ripple {
-  background-color: rgba(0, 221, 153, 0.4); /* rgba(254, 98, 113, 0.4 */
+  background-color: rgba(45, 215, 255, 0.4); /* rgba(254, 98, 113, 0.4 */
 }
 .waves-effect.waves-primary .waves-ripple {
   background-color: rgba(70, 103, 204, 0.4);

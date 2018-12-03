@@ -69,23 +69,28 @@
                     <tbody>
                       <tr>
                         <td><b><span class="m-t-0 header-title text-turboquant">Sharpe</span></b></td>
-                        <td><b>{{ statsd.fin.sharpe }}</b></td>
+                        <td><b>{{ portfolio.sharpe }}</b></td>
+                        <td>{{ portfolio.updated_on }}</td>
                       </tr>
                       <tr>
                         <td><b><span class="m-t-0 header-title text-turboquant">Sortino</span></b></td>
-                        <td><b>{{ statsd.fin.sortino }}</b></td>
+                        <td><b>{{ portfolio.sortino }}</b></td>
+                        <td>{{ portfolio.updated_on }}</td>
                       </tr>
                       <tr>
                         <td><b><span class="m-t-0 header-title text-turboquant">MAR</span></b></td>
-                        <td><b>{{ statsd.fin.mar }}</b></td>
+                        <td><b>{{ portfolio.mar }}</b></td>
+                        <td>{{ portfolio.updated_on }}</td>
                       </tr>
                       <tr>
                         <td><b><span class="m-t-0 header-title text-turboquant">Yearly Return</span></b></td>
-                        <td><b>{{ statsd.fin.returnYearly }}</b></td>
+                        <td><b>{{ portfolio.returnYearly }}</b></td>
+                        <td>{{ portfolio.updated_on }}</td>
                       </tr>
                       <tr>
                         <td><b><span class="m-t-0 header-title text-turboquant">Yearly Volatility</span></b></td>
-                        <td><b>{{ statsd.fin.volaYearly }}</b></td>
+                        <td><b>{{ portfolio.volaYearly }}</b></td>
+                        <td>{{ portfolio.updated_on }}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -96,27 +101,33 @@
                     <tbody>
                       <tr>
                         <td><b><span class="m-t-0 header-title text-turboquant">Max Drawdown</span></b></td>
-                        <td><b>{{ statsd.fin.maxDD }}</b></td>
+                        <td><b>{{ portfolio.maxDD }}</b></td>
+                        <td>{{ portfolio.updated_on }}</td>
                       </tr>
                       <tr>
                         <td><b><span class="m-t-0 header-title text-turboquant">Max Drawdown Begin</span></b></td>
-                        <td><b>{{ statsd.fin.maxDDBegin }}</b></td>
+                        <td><b>{{ portfolio.maxDDBegin }}</b></td>
+                        <td>{{ portfolio.updated_on }}</td>
                       </tr>
                       <tr>
                         <td><b><span class="m-t-0 header-title text-turboquant">Max Drawdown End</span></b></td>
-                        <td><b>{{ statsd.fin.maxDDEnd }}</b></td>
+                        <td><b>{{ portfolio.maxDDEnd }}</b></td>
+                        <td>{{ portfolio.updated_on }}</td>
                       </tr>
                       <tr>
                         <td><b><span class="m-t-0 header-title text-turboquant">Max Time Off Peak</span></b></td>
-                        <td><b>{{ statsd.fin.maxTimeOffPeak }}</b></td>
+                        <td><b>{{ portfolio.maxTimeOffPeak }}</b></td>
+                        <td>{{ portfolio.updated_on }}</td>
                       </tr>
                       <tr>
                         <td><b><span class="m-t-0 header-title text-turboquant">Max Time Off Peak Begin</span></b></td>
-                        <td><b>{{ statsd.fin.maxTimeOffPeakBegin }}</b></td>
+                        <td><b>{{ portfolio.maxTimeOffPeakBegin }}</b></td>
+                        <td>{{ portfolio.updated_on }}</td>
                       </tr>
                       <tr>
                         <td><b><span class="m-t-0 header-title text-turboquant">Max Time Off Peak End</span></b></td>
-                        <td><b>{{ statsd.fin.maxTimeOffPeakEnd }}</b></td>
+                        <td><b>{{ portfolio.maxTimeOffPeakEnd }}</b></td>
+                        <td>{{ portfolio.updated_on }}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -129,7 +140,7 @@
           <div class="row">
             <div class="col-sm-12 card-box">
               <form id="equityform">
-                <button type="submit" class="btn btn-custom waves-effect w-md waves-light">Plot</button>
+                <button type="submit" class="btn btn-primary waves-effect w-md waves-light">Plot</button>
               </form>
             </div>
             <div id="equitygraph"></div>

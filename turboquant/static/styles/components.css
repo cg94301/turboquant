@@ -59,8 +59,8 @@ File: Components
   color: #ffffff !important;
 }
 .btn-custom {
-  background-color: #00dd99 !important;
-  border-color: #00dd99 !important;
+  background-color: #2dd7ff !important;
+  border-color: #2dd7ff !important;
 }
 .btn-custom:hover,
 .btn-custom:focus,
@@ -214,7 +214,7 @@ File: Components
   border-bottom: 2px solid #d9d9db !important;
 }
 .btn-bordred.btn-custom {
-  background-color: #00dd99;
+  background-color: #2dd7ff;
   border-bottom: 2px solid #fe3f51 !important;
 }
 .btn-bordred.btn-primary {
@@ -253,7 +253,7 @@ File: Components
 .btn-trans.btn-custom {
   border: 1px solid rgba(254, 98, 113, 0.1) !important;
   background-color: rgba(254, 98, 113, 0.15) !important;
-  color: #00dd99 !important;
+  color: #2dd7ff !important;
 }
 .btn-trans.btn-primary {
   border: 1px solid rgba(70, 103, 204, 0.1) !important;
@@ -443,8 +443,8 @@ File: Components
   height: 17px;
 }
 .checkbox-custom input[type="checkbox"]:checked + label::before {
-  background-color: #00dd99;
-  border-color: #00dd99;
+  background-color: #2dd7ff;
+  border-color: #2dd7ff;
 }
 .checkbox-custom input[type="checkbox"]:checked + label::after {
   color: #ffffff;
@@ -578,13 +578,13 @@ File: Components
   height: 17px;
 }
 .radio-custom input[type="radio"] + label::after {
-  background-color: #00dd99;
+  background-color: #2dd7ff;
 }
 .radio-custom input[type="radio"]:checked + label::before {
-  border-color: #00dd99;
+  border-color: #2dd7ff;
 }
 .radio-custom input[type="radio"]:checked + label::after {
-  background-color: #00dd99;
+  background-color: #2dd7ff;
 }
 .radio-primary input[type="radio"] + label::after {
   background-color: #4667cc;
@@ -728,13 +728,13 @@ File: Components
   border-color: rgba(254, 98, 113, 0.5) !important;
 }
 .panel-border.panel-custom .panel-heading {
-  color: #00dd99 !important;
+  color: #2dd7ff !important;
 }
 .panel-border.panel-primary {
   border-color: rgba(70, 103, 204, 0.5) !important;
 }
 .panel-border.panel-primary .panel-heading {
-  color: #00dd99 !important;
+  color: #2dd7ff !important;
 }
 .panel-border.panel-success {
   border-color: rgba(62, 200, 69, 0.5) !important;
@@ -850,7 +850,7 @@ File: Components
   line-height: 18px;
 }
 .card-tabs .nav-pills li.active a {
-  background-color: #00dd99 !important;
+  background-color: #2dd7ff !important;
   color: #ffffff !important;
 }
 .card-tabs .tab-content {
@@ -1017,7 +1017,7 @@ File: Components
   background-color: #ff8acc;
 }
 .progress-bar-custom {
-  background-color: #00dd99;
+  background-color: #2dd7ff;
 }
 /* Custom progressbars */
 .progress-bar-custom-alt {
@@ -1110,11 +1110,11 @@ th {
   border: 1px solid #dcdcdc;
 }
 table.focus-on tbody tr.focused th {
-  background-color: #00dd99;
+  background-color: #2dd7ff;
   color: #ffffff;
 }
 table.focus-on tbody tr.focused td {
-  background-color: #00dd99;
+  background-color: #2dd7ff;
   color: #ffffff;
 }
 .fixed-table-container tbody .selected td {
@@ -1184,7 +1184,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child:before
 /* Key Table */
 table.dataTable th.focus,
 table.dataTable td.focus {
-  outline: 3px solid #00dd99 !important;
+  outline: 3px solid #2dd7ff !important;
   outline-offset: -1px;
 }
 div.DTS tbody tr.even {
@@ -1256,10 +1256,10 @@ div.DTS tbody tr.even {
 .irs-from,
 .irs-to,
 .irs-single {
-  background-color: #00dd99;
+  background-color: #2dd7ff;
 }
 .irs-from:after,
 .irs-to:after,
 .irs-single:after {
-  border-top-color: #00dd99;
+  border-top-color: #2dd7ff;
 }
