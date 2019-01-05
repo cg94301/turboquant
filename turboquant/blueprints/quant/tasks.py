@@ -12,7 +12,10 @@ celery = create_celery_app()
 
 def get_jobid(uid,len):
     code = ''.join(random.choice('0123456789abcdefghijklmnopqrstuvwxyz') for i in range(len))
-    jobid = str(uid) + '-' + str(code)
+    # Drop the user ID as part of job name?
+    # Maybe good to enable for debug. 
+    #jobid = str(uid) + '-' + str(code)
+    jobid = str(code)    
     return jobid
 
 @celery.task()
@@ -159,6 +162,7 @@ def launch_batch_job(uid,params):
     #print "jobid:", jobid
     #print (jobid,) + comb[0]
 
+    # Give every job an identifier.
     comb_id = [ (get_jobid(uid,10),) + job for job in comb ]
     print "Running the following jobs:"
     print comb_id
@@ -174,6 +178,8 @@ def launch_batch_job(uid,params):
 
     wait_time = 20
     batch_size = 2
+    # Since we dont' track the user ID in job name anymore,
+    # why use specific SFN ID?
     sfnid = get_jobid(uid,12)
     
     client = boto3.client('stepfunctions')
@@ -184,8 +190,8 @@ def launch_batch_job(uid,params):
     try:
         response = client.start_execution(
             stateMachineArn='arn:aws:states:us-west-2:188444798703:stateMachine:tqbatch',
-            input=payloadb,
-            name=sfnid
+            input=payloadb
+            #name=sfnid
         )
 
         print "launched tqbatch:", response['executionArn']

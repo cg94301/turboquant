@@ -502,6 +502,91 @@ var equity = function () {
 };
 
 
+var compile = function () {
+    console.log('compile triggered')
+
+    var getStrategy = function (csrfToken) {
+        console.log('Triggered getStrategy')
+        console.log(csrfToken)
+        return $.ajax({
+            type: 'GET',
+            url: '/quant/portfolio/compile',
+            //dataType: 'json',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-CSRFToken', csrfToken);
+                //return $outcomeStatus.text('')
+                //    .removeClass('alert-success alert-warning alert-error').hide();
+            }
+        }).done(function (data, status, xhr) {
+            console.log("compile done:\n", + data);
+
+        }).fail(function (xhr, status, error) {
+            console.log("ERROR compile: " + error);
+
+        }).always(function (xhr, status, error) {
+            console.log("always compile triggered");
+
+        });
+    };
+
+    jQuery(function ($) {
+        var csrfToken = $('meta[name=csrf-token]').attr('content');
+
+        $('body').on('submit', '#compileform', function () {
+            //$spinner.show();
+            //$form.find('button').prop('disabled', true);
+
+            getStrategy(csrfToken);
+
+            return false;
+        });
+    });
+};
+
+var retrieve = function () {
+    console.log('retrieve triggered')
+
+    var retrieveStrategy = function (csrfToken) {
+        console.log('Triggered retrieveStrategy')
+        console.log(csrfToken)
+        return $.ajax({
+            type: 'GET',
+            url: '/quant/portfolio/retrieve',
+            //dataType: 'json',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-CSRFToken', csrfToken);
+                //return $outcomeStatus.text('')
+                //    .removeClass('alert-success alert-warning alert-error').hide();
+            }
+        }).done(function (data, status, xhr) {
+            console.log("retrieve done:\n", + data);
+            console.log("retrieve done:\n", + status);
+            console.log("retrieve done:\n", + xhr);
+
+        }).fail(function (xhr, status, error) {
+            console.log("ERROR retrieve: " + error);
+
+        }).always(function (xhr, status, error) {
+            console.log("always retrieve triggered");
+
+        });
+    };
+
+    jQuery(function ($) {
+        var csrfToken = $('meta[name=csrf-token]').attr('content');
+
+        $('body').on('submit', '#retrieveform', function () {
+            //$spinner.show();
+            //$form.find('button').prop('disabled', true);
+
+            retrieveStrategy(csrfToken);
+
+            return false;
+        });
+    });
+};
+
+
 // Initialize everything when the browser is ready.
 $(document).ready(function() {
     console.log('document ready');
@@ -512,5 +597,7 @@ $(document).ready(function() {
     stripe('#payment_form');
     bets();
     equity();
+    //compile();
+    //retrieve();
 });
 

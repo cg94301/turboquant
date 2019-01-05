@@ -5,6 +5,7 @@ from flask import (
     flash,
     url_for,
     render_template,
+    send_file,
     jsonify)
 from flask_login import login_required, current_user
 from sqlalchemy import text,and_
@@ -15,7 +16,7 @@ from turboquant.extensions import db
 from flask_wtf import Form
 
 from werkzeug.utils import secure_filename
-import boto3,json,csv
+import boto3,json,csv,sys,os
 
 quant = Blueprint('quant', __name__,
                   template_folder='templates', url_prefix='/quant')
@@ -30,6 +31,7 @@ S3_BUCKET = 'cgiam.sagemaker'
 
 s3 = boto3.client("s3")
 client = boto3.client('lambda')
+sfn = boto3.client('stepfunctions')
 
 def upload_file_to_s3(file, bucket_name, uid, acl="public-read"):
 
@@ -434,7 +436,7 @@ def strategies(page):
         .filter(Strategy.user_id == current_user.id) \
         .filter(Strategy.search(request.args.get('q', ''))) \
         .order_by(text(order_values)) \
-        .paginate(page, 20, True)
+        .paginate(page, 10, True)
 
     return render_template('quant/page/strategies.html', strategies=paginated_strategies, form=form, bulk_form=bulk_form)
 
@@ -444,9 +446,90 @@ def portfolio():
 
     form = Form()
     uid = current_user.id
+
+    compile_busy = False
     
     if request.method == 'POST':
 
+        if 'retrieve' in request.form:
+            print "retrieve"
+
+            try:
+                # Download equity curve file from S3.
+                s3.download_file(S3_BUCKET, 'u' + str(uid) + '/data/turboquant.py', '/tmp/turboquant.' + str(uid) + '.py')   
+            except:
+                print "not ready"
+                compile_busy = True
+                #flash('Compile not ready. Try again a bit later.')
+                print "Oops! ",sys.exc_info()
+                #return redirect(url_for('quant.portfolio'))
+
+
+            print "debug. retrieve continues."
+            
+            try:
+                return send_file('/tmp/turboquant.1.py', as_attachment=True, attachment_filename='turboquant.py')
+            except:
+                print "Oops! ",sys.exc_info()            
+
+
+        if 'compile' in request.form:
+
+            # Delete Strategy first from AWS.
+            try:
+                response = s3.delete_object(Bucket=S3_BUCKET, Key='u' + str(uid) + '/data/turboquant.py')
+                print "delete response:", response
+            except:
+                print "Strategy delete error: " , sys.exc_info()
+
+            # Delete Strategy from local.
+            try:
+                os.remove('/tmp/turboquant.' + str(uid) + '.py')
+            except:
+                print "Strategy local remove error: " , sys.exc_info()        
+        
+            print "Compiling portfolio:"
+
+            # { "data": {
+            #     "uid": 1,
+            #     "jobs": [["1-3zr381lryj","SBUX"],["1-89suhahgfk","ORCL"],["1-c0xd1m5j6n","CVX"],["1-dtq58uj5im","AAPL"]],
+            #     "portfolio": [["1-3zr381lryj","SBUX"],["1-89suhahgfk","ORCL"],["1-c0xd1m5j6n","CVX"],["1-dtq58uj5im","AAPL"]],
+            #     "batch_size": 2,
+            #     "active": [],
+            #     "all_done": false,
+            #     "any_done": false,
+            #     "wait_time": 10,
+            #     "target": "py"
+            # }
+            # }
+            
+            # portfolio strategies: [(u'AAPL', u'fwezr2w2si'), (u'CVX', u'1-c0xd1m5j6n')]
+            
+            # Is it better to encapsulate as task? Or start directly from here?
+    
+            selectedq = Strategy.query.filter(and_(Strategy.user_id == uid, Strategy.portfolio == True)).all()
+            
+            selected = [(t.name,t.ticker) for t in selectedq]
+            print "portfolio strategies:", selected
+    
+
+            #jobs = [("1-3zr381lryj","SBUX"),("1-89suhahgfk","ORCL"),("1-c0xd1m5j6n","CVX"),("1-dtq58uj5im","AAPL")]
+            jobs = selected
+            portfolio = jobs
+    
+            params = {"data": {"uid": uid, "jobs": jobs, "portfolio": portfolio, "batch_size": 2, "active":[], "all_done": False, "any_done": False, "wait_time": 10, "target": "py"}}
+            payload = json.dumps(params)
+            payloadb = str.encode(payload)
+    
+            response = sfn.start_execution(
+                stateMachineArn='arn:aws:states:us-west-2:188444798703:stateMachine:tqmake',
+                input=payloadb
+                #name=sfnid
+            )
+
+            print "tqmake: ", response            
+
+            
         if 'backtest' in request.form:
             print "backtest"
 
@@ -519,7 +602,7 @@ def portfolio():
     print type(portfolio)
     print "portfolio db:", portfolio
                     
-    return render_template('quant/page/portfolio.html', form=form, portfolio=portfolio)
+    return render_template('quant/page/portfolio.html', form=form, portfolio=portfolio, compile_busy=compile_busy)
 
 
 @quant.route('/portfolio/data', methods=['GET'])
@@ -542,3 +625,92 @@ def portfolio_data():
             #print "equity:", equity
 
     return jsonify({"equity":equity})
+
+
+@quant.route('/portfolio/compile', methods=['GET'])
+def compile():
+
+    uid = current_user.id
+
+    # Delete Strategy first from AWS.
+    try:
+        response = s3.delete_object(Bucket=S3_BUCKET, Key='u' + str(uid) + '/data/turboquant.py')
+        print "delete response:", response
+    except:
+        print "Strategy delete error: " , sys.exc_info()
+
+    # Delete Strategy from local.
+    try:
+        os.remove('/tmp/turboquant.' + str(uid) + '.py')
+    except:
+        print "Strategy local remove error: " , sys.exc_info()        
+        
+    print "Compiling portfolio:"
+
+    # { "data": {
+    #     "uid": 1,
+    #     "jobs": [["1-3zr381lryj","SBUX"],["1-89suhahgfk","ORCL"],["1-c0xd1m5j6n","CVX"],["1-dtq58uj5im","AAPL"]],
+    #     "portfolio": [["1-3zr381lryj","SBUX"],["1-89suhahgfk","ORCL"],["1-c0xd1m5j6n","CVX"],["1-dtq58uj5im","AAPL"]],
+    #     "batch_size": 2,
+    #     "active": [],
+    #     "all_done": false,
+    #     "any_done": false,
+    #     "wait_time": 10,
+    #     "target": "py"
+    # }
+    # }
+
+    # portfolio strategies: [(u'AAPL', u'fwezr2w2si'), (u'CVX', u'1-c0xd1m5j6n')]
+
+    # Is it better to encapsulate as task? Or start directly from here?
+    
+    selectedq = Strategy.query.filter(and_(Strategy.user_id == uid, Strategy.portfolio == True)).all()
+
+    selected = [(t.name,t.ticker) for t in selectedq]
+    print "portfolio strategies:", selected
+    
+
+    #jobs = [("1-3zr381lryj","SBUX"),("1-89suhahgfk","ORCL"),("1-c0xd1m5j6n","CVX"),("1-dtq58uj5im","AAPL")]
+    jobs = selected
+    portfolio = jobs
+    
+    params = {"data": {"uid": uid, "jobs": jobs, "portfolio": portfolio, "batch_size": 2, "active":[], "all_done": False, "any_done": False, "wait_time": 10, "target": "py"}}
+    payload = json.dumps(params)
+    payloadb = str.encode(payload)
+    
+    response = sfn.start_execution(
+        stateMachineArn='arn:aws:states:us-west-2:188444798703:stateMachine:tqmake',
+        input=payloadb
+        #name=sfnid
+    )
+
+    print "tqmake: ", response
+    
+    return redirect(url_for('quant.portfolio'))
+
+
+@quant.route('/portfolio/retrieve', methods=['GET'])
+def retrieve():
+
+
+    print "Retrieving Strategy:"
+
+    uid = current_user.id
+
+
+    try:
+        # Download equity curve file from S3.
+        s3.download_file(S3_BUCKET, 'u' + str(uid) + '/data/turboquant.py', '/tmp/turboquant.' + str(uid) + '.py')   
+    except:
+        print "not ready"
+        flash('Compile not ready. Try again a bit later.')
+        print "Oops! ",sys.exc_info()
+        #return redirect(url_for('quant.portfolio'))
+
+    
+    try:
+        return send_file('/tmp/turboquant.1.py')
+    except:
+        print "Oops! ",sys.exc_info()
+        
+    #return redirect(url_for('quant.portfolio'))

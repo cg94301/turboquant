@@ -56,108 +56,193 @@
           </div>
           
           <div class="row">
-            <form action="{{ url_for('quant.portfolio') }}" method="post">            
-              <div class="col-sm-12 card-box">
-                {{ form.hidden_tag() }}
-                <div>
-                  <button type="submit" name="backtest" class="btn btn-custom waves-effect w-md waves-light">Backtest</button>
+
+            <div class="col-sm-6 card-box">
+
+
+
+              <div class="row">
+                <form action="{{ url_for('quant.portfolio') }}" method="post">
+                  {{ form.hidden_tag() }}
+                  
+                  <div class="col-sm-3" style="margin-bottom: 6px;">
+                    <button type="submit" name="backtest" class="btn btn-custom waves-effect w-md waves-light">Backtest</button>
+                  </div>
+                  
+                  <div class="col-sm-4" style="margin-bottom: 6px;">
+                    
+                    <!-- <div class="form-group"> -->
+
+                      <div class="col-sm-8">
+                      <!-- <input type="text" class="form-control" id="num-round" value="100" name="num-round" placeholder="{{ form.description }}"> -->
+                      <!-- <label for="decay">Decay</label> -->
+                        <select class="form-control input-sm" name="decay">
+                          <option selected="selected">0</option>
+                          <option>1</option>
+                          <option>2</option>
+                          <option>3</option>
+                          <option>4</option>
+                          <option>5</option>
+                          <option>6</option>
+                          <option>7</option>
+                          <option>8</option>
+                          <option>9</option>                        
+                        </select>
+                        
+                      </div>
+                      
+                      <div class="col-sm-4" style="padding-left: 0px">
+                        <label for="num-round" class="control-label" style="margin-top: 5px">Decay</label>
+                      </div>
+                      
+                    <!-- </div> -->
+                  </div>
+
+                  <div class="col-sm-5">
+                    <div class="checkbox m-b-15" style="margin-top: 5px">
+                      <input id="checkbox0" type="checkbox">
+                      <label for="checkbox0">
+                        <span style="font-family: Lato">Long Only</span>
+                      </label>
+                    </div>
+                  </div>
+                  
+                </form>                  
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div style="margin-bottom: 6px;">
+                    <form id="equityform">
+                      <button type="submit" name="equityplot" class="btn btn-custom waves-effect w-md waves-light">Plot</button>
+                    </form>
+                  </div>
                 </div>
               </div>
-              <div class="col-sm-12 card-box">
-                <div>
-                  <button type="submit" name="compile" class="btn btn-info btn-trans waves-effect w-md waves-light">Compile</button>
-                  <button type="submit" name="download" class="btn btn-info btn-trans waves-effect w-md waves-light">Download <span><i class="fa fa-cloud-download"></i></span></button>
-                </div>
-              </div>              
-              <div class="col-sm-12 card-box">
-                <div class="col-sm-6">
-                  <table class="table table-striped dt-responsive nowrap">
-                    <tbody>
-                      <tr>
-                        <td><b><span class="m-t-0 header-title text-turboquant">Sharpe</span></b></td>
-                        <td><b>{{ portfolio.sharpe }}</b></td>
-                        <td>{{ portfolio.updated_on }}</td>
-                      </tr>
-                      <tr>
-                        <td><b><span class="m-t-0 header-title text-turboquant">Sortino</span></b></td>
-                        <td><b>{{ portfolio.sortino }}</b></td>
-                        <td>{{ portfolio.updated_on }}</td>
-                      </tr>
-                      <tr>
-                        <td><b><span class="m-t-0 header-title text-turboquant">MAR</span></b></td>
-                        <td><b>{{ portfolio.mar }}</b></td>
-                        <td>{{ portfolio.updated_on }}</td>
-                      </tr>
-                      <tr>
-                        <td><b><span class="m-t-0 header-title text-turboquant">Yearly Return</span></b></td>
-                        <td><b>{{ portfolio.returnYearly }}</b></td>
-                        <td>{{ portfolio.updated_on }}</td>
-                      </tr>
-                      <tr>
-                        <td><b><span class="m-t-0 header-title text-turboquant">Yearly Volatility</span></b></td>
-                        <td><b>{{ portfolio.volaYearly }}</b></td>
-                        <td>{{ portfolio.updated_on }}</td>
-                      </tr>
-                    </tbody>
-                  </table>
+              
+            </div>
+            
+            
+            <div class="col-sm-6 card-box">
 
+              <div class="col-sm-3" style="margin-bottom: 6px;">
+                
+                <div style="margin-bottom: 6px">
+                  <form action="{{ url_for('quant.portfolio') }}" method="post" id="compileform">
+                    {{ form.hidden_tag() }}
+                    <button type="submit" name="compile" class="btn btn-purple btn-transs waves-effect w-md waves-light">Compile</button>
+                  </form>
                 </div>
-                <div class="col-sm-6">
-                  <table class="table table-striped dt-responsive nowrap">
-                    <tbody>
-                      <tr>
-                        <td><b><span class="m-t-0 header-title text-turboquant">Max Drawdown</span></b></td>
-                        <td><b>{{ portfolio.maxDD }}</b></td>
-                        <td>{{ portfolio.updated_on }}</td>
-                      </tr>
-                      <tr>
-                        <td><b><span class="m-t-0 header-title text-turboquant">Max Drawdown Begin</span></b></td>
-                        <td><b>{{ portfolio.maxDDBegin }}</b></td>
-                        <td>{{ portfolio.updated_on }}</td>
-                      </tr>
-                      <tr>
-                        <td><b><span class="m-t-0 header-title text-turboquant">Max Drawdown End</span></b></td>
-                        <td><b>{{ portfolio.maxDDEnd }}</b></td>
-                        <td>{{ portfolio.updated_on }}</td>
-                      </tr>
-                      <tr>
-                        <td><b><span class="m-t-0 header-title text-turboquant">Max Time Off Peak</span></b></td>
-                        <td><b>{{ portfolio.maxTimeOffPeak }}</b></td>
-                        <td>{{ portfolio.updated_on }}</td>
-                      </tr>
-                      <tr>
-                        <td><b><span class="m-t-0 header-title text-turboquant">Max Time Off Peak Begin</span></b></td>
-                        <td><b>{{ portfolio.maxTimeOffPeakBegin }}</b></td>
-                        <td>{{ portfolio.updated_on }}</td>
-                      </tr>
-                      <tr>
-                        <td><b><span class="m-t-0 header-title text-turboquant">Max Time Off Peak End</span></b></td>
-                        <td><b>{{ portfolio.maxTimeOffPeakEnd }}</b></td>
-                        <td>{{ portfolio.updated_on }}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-
-                </div>                
+                <div style="margin-bottom: 6px">
+                  <form action="{{ url_for('quant.portfolio') }}" method="post" id="retrieveform" >
+                    {{ form.hidden_tag() }}
+                    <button type="submit" name="retrieve" class="btn btn-info btn-trans waves-effect w-md waves-light">Download
+                      <span><i class="fa fa-cloud-download"></i></span>
+                    </button>
+                  </form>
+                </div>
+                
               </div>
-            </form>
+              
+              <div class="col-sm-9" style="margin-bottom: 6px;">
+                    
+                <div class="col-sm-6" style="margin-bottom: 6px;">
+                  <select class="form-control input-sm" name="target">
+                    <option selected="selected">Python</option>
+                    <option>Easy Language</option>
+                  </select>
+
+                  <div style="margin-top: 15px;">
+                    {% if compile_busy == True %}
+                    <span class="label label-warning"> NOT READY. Try again later. </span>
+                    {% endif %}
+                  </div>                      
+                  
+                </div>
+                      
+                <div class="col-sm-6" style="margin-bottom: 6px; padding-left: 0px">
+                  <label for="num-round" class="control-label" style="margin-top: 5px">Target</label>
+                </div>
+                
+
+              </div>
+                  
+            </div>
           </div>
           
+
           <div class="row">
+
             <div class="col-sm-12 card-box">
-              <form id="equityform">
-                <button type="submit" class="btn btn-custom waves-effect w-md waves-light">Plot</button>
-              </form>
+              <span>Last update: {{ portfolio.updated_on }}</span>
+              <div id="equitygraph"></div>
+              <div class="col-sm-6">
+                <table class="table table-striped dt-responsive nowrap">
+                  <tbody>
+                    <tr>
+                      <td><b><span class="m-t-0 header-title text-turboquant">Sharpe</span></b></td>
+                      <td><b>{{ portfolio.sharpe }}</b></td>
+                    </tr>
+                    <tr>
+                      <td><b><span class="m-t-0 header-title text-turboquant">Sortino</span></b></td>
+                      <td><b>{{ portfolio.sortino }}</b></td>
+                    </tr>
+                    <tr>
+                      <td><b><span class="m-t-0 header-title text-turboquant">MAR</span></b></td>
+                      <td><b>{{ portfolio.mar }}</b></td>
+                    </tr>
+                    <tr>
+                      <td><b><span class="m-t-0 header-title text-turboquant">Yearly Return</span></b></td>
+                      <td><b>{{ portfolio.returnYearly }}</b></td>
+                    </tr>
+                    <tr>
+                      <td><b><span class="m-t-0 header-title text-turboquant">Yearly Volatility</span></b></td>
+                      <td><b>{{ portfolio.volaYearly }}</b></td>
+                    </tr>
+                  </tbody>
+                </table>
+
+              </div>
+              <div class="col-sm-6">
+                <table class="table table-striped dt-responsive nowrap">
+                  <tbody>
+                    <tr>
+                      <td><b><span class="m-t-0 header-title text-turboquant">Max Drawdown</span></b></td>
+                      <td><b>{{ portfolio.maxDD }}</b></td>
+                    </tr>
+                    <tr>
+                      <td><b><span class="m-t-0 header-title text-turboquant">Max Drawdown Begin</span></b></td>
+                      <td><b>{{ portfolio.maxDDBegin }}</b></td>
+                    </tr>
+                    <tr>
+                      <td><b><span class="m-t-0 header-title text-turboquant">Max Drawdown End</span></b></td>
+                      <td><b>{{ portfolio.maxDDEnd }}</b></td>
+                    </tr>
+                    <tr>
+                      <td><b><span class="m-t-0 header-title text-turboquant">Max Time Off Peak</span></b></td>
+                      <td><b>{{ portfolio.maxTimeOffPeak }}</b></td>
+                    </tr>
+                    <tr>
+                      <td><b><span class="m-t-0 header-title text-turboquant">Max Time Off Peak Begin</span></b></td>
+                      <td><b>{{ portfolio.maxTimeOffPeakBegin }}</b></td>
+                    </tr>
+                    <tr>
+                      <td><b><span class="m-t-0 header-title text-turboquant">Max Time Off Peak End</span></b></td>
+                      <td><b>{{ portfolio.maxTimeOffPeakEnd }}</b></td>
+                    </tr>
+                  </tbody>
+                </table>
+
+              </div>                
             </div>
-            <div id="equitygraph"></div>
+            <!-- </form> -->
           </div>
           <!-- end row -->
         </div> <!-- container -->
       </div> <!-- content -->
 
       <!-- <footer class="footer">
-        2017 © Flacto. Design by <a href="http://coderthemes.com/" target="_blank" class="text-muted">Coderthemes</a>
-      </footer> -->
+           2017 © Flacto. Design by <a href="http://coderthemes.com/" target="_blank" class="text-muted">Coderthemes</a>
+           </footer> -->
 
     </div>
     <!-- ============================================================== -->
@@ -172,51 +257,51 @@
   </script>
 
   <!-- jQuery  -->
-<!--   <script src="assets/js/jquery.min.js"></script>
-  <script src="assets/js/bootstrap.min.js"></script>
-  <script src="assets/js/detect.js"></script>
-  <script src="assets/js/fastclick.js"></script>
-  <script src="assets/js/jquery.slimscroll.js"></script>
-  <script src="assets/js/jquery.blockUI.js"></script>
-  <script src="assets/js/waves.js"></script>
-  <script src="assets/js/wow.min.js"></script>
-  <script src="assets/js/jquery.nicescroll.js"></script>
-  <script src="assets/js/jquery.scrollTo.min.js"></script> -->
+  <!--   <script src="assets/js/jquery.min.js"></script>
+         <script src="assets/js/bootstrap.min.js"></script>
+         <script src="assets/js/detect.js"></script>
+         <script src="assets/js/fastclick.js"></script>
+         <script src="assets/js/jquery.slimscroll.js"></script>
+         <script src="assets/js/jquery.blockUI.js"></script>
+         <script src="assets/js/waves.js"></script>
+         <script src="assets/js/wow.min.js"></script>
+         <script src="assets/js/jquery.nicescroll.js"></script>
+         <script src="assets/js/jquery.scrollTo.min.js"></script> -->
 
   <!-- Datatables-->
-<!--  <script src="assets/plugins/datatables/jquery.dataTables.min.js"></script>
-  <script src="assets/plugins/datatables/dataTables.bootstrap.js"></script>
-  <script src="assets/plugins/datatables/dataTables.buttons.min.js"></script>
-  <script src="assets/plugins/datatables/buttons.bootstrap.min.js"></script>
-  <script src="assets/plugins/datatables/jszip.min.js"></script>
-  <script src="assets/plugins/datatables/pdfmake.min.js"></script>
-  <script src="assets/plugins/datatables/vfs_fonts.js"></script>
-  <script src="assets/plugins/datatables/buttons.html5.min.js"></script>
-  <script src="assets/plugins/datatables/buttons.print.min.js"></script>
-  <script src="assets/plugins/datatables/dataTables.fixedHeader.min.js"></script>
-  <script src="assets/plugins/datatables/dataTables.keyTable.min.js"></script>
-  <script src="assets/plugins/datatables/dataTables.responsive.min.js"></script>
-  <script src="assets/plugins/datatables/responsive.bootstrap.min.js"></script>
-  <script src="assets/plugins/datatables/dataTables.scroller.min.js"></script> -->
+  <!--  <script src="assets/plugins/datatables/jquery.dataTables.min.js"></script>
+        <script src="assets/plugins/datatables/dataTables.bootstrap.js"></script>
+        <script src="assets/plugins/datatables/dataTables.buttons.min.js"></script>
+        <script src="assets/plugins/datatables/buttons.bootstrap.min.js"></script>
+        <script src="assets/plugins/datatables/jszip.min.js"></script>
+        <script src="assets/plugins/datatables/pdfmake.min.js"></script>
+        <script src="assets/plugins/datatables/vfs_fonts.js"></script>
+        <script src="assets/plugins/datatables/buttons.html5.min.js"></script>
+        <script src="assets/plugins/datatables/buttons.print.min.js"></script>
+        <script src="assets/plugins/datatables/dataTables.fixedHeader.min.js"></script>
+        <script src="assets/plugins/datatables/dataTables.keyTable.min.js"></script>
+        <script src="assets/plugins/datatables/dataTables.responsive.min.js"></script>
+        <script src="assets/plugins/datatables/responsive.bootstrap.min.js"></script>
+        <script src="assets/plugins/datatables/dataTables.scroller.min.js"></script> -->
 
   <!-- Datatable init js -->
   <!-- <script src="assets/pages/jquery.datatables.init.js"></script> -->
 
   <!-- App js -->
   <!-- <script src="assets/js/jquery.core.js"></script>
-  <script src="assets/js/jquery.app.js"></script>
+       <script src="assets/js/jquery.app.js"></script>
 
-  <script type="text/javascript">
-    $(document).ready(function() {
-    $('#datatable').dataTable();
-    $('#datatable-keytable').DataTable( { keys: true } );
-    $('#datatable-responsive').DataTable();
-    $('#datatable-scroller').DataTable( { ajax: "assets/plugins/datatables/json/scroller-demo.json", deferRender: true, scrollY: 380, scrollCollapse: true, scroller: true } );
-    var table = $('#datatable-fixed-header').DataTable( { fixedHeader: true } );
-    } );
-    TableManageButtons.init();
+       <script type="text/javascript">
+         $(document).ready(function() {
+         $('#datatable').dataTable();
+         $('#datatable-keytable').DataTable( { keys: true } );
+         $('#datatable-responsive').DataTable();
+         $('#datatable-scroller').DataTable( { ajax: "assets/plugins/datatables/json/scroller-demo.json", deferRender: true, scrollY: 380, scrollCollapse: true, scroller: true } );
+         var table = $('#datatable-fixed-header').DataTable( { fixedHeader: true } );
+         } );
+         TableManageButtons.init();
 
-  </script> -->
+       </script> -->
 
 </div>
 {% endblock %}
