@@ -179,7 +179,7 @@ def launch_batch_job(uid,params):
     wait_time = 20
     batch_size = 2
     # Since we dont' track the user ID in job name anymore,
-    # why use specific SFN ID?
+    # why use specific SFN ID? REQUIRED. BREAKS IF generic ID is used.
     sfnid = get_jobid(uid,12)
     
     client = boto3.client('stepfunctions')
@@ -190,8 +190,8 @@ def launch_batch_job(uid,params):
     try:
         response = client.start_execution(
             stateMachineArn='arn:aws:states:us-west-2:188444798703:stateMachine:tqbatch',
-            input=payloadb
-            #name=sfnid
+            input=payloadb,
+            name=sfnid
         )
 
         print "launched tqbatch:", response['executionArn']
