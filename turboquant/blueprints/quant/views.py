@@ -88,7 +88,7 @@ def data(page):
                     
     paginated_tickers = Ticker.query \
                               .filter(Ticker.user_id == current_user.id) \
-                              .filter(Ticker.search(request.args.get('q', ''))) \
+                              .filter(Ticker.search(text(request.args.get('q', '')))) \
                               .order_by(text(order_values)) \
                               .paginate(page, 2, True) 
             
@@ -434,7 +434,7 @@ def strategies(page):
     
     paginated_strategies = Strategy.query \
         .filter(Strategy.user_id == current_user.id) \
-        .filter(Strategy.search(request.args.get('q', ''))) \
+        .filter(Strategy.search(text(request.args.get('q', '')))) \
         .order_by(text(order_values)) \
         .paginate(page, 10, True)
 

@@ -33,7 +33,7 @@ class Strategy(ResourceMixin, db.Model):
         super(Strategy, self).__init__(**kwargs)
 
     @classmethod
-    def search(cls, query):
+    def search(cls, query=''):
         """
         Search a resource by 1 or more fields.
 
@@ -41,8 +41,9 @@ class Strategy(ResourceMixin, db.Model):
         :type query: str
         :return: SQLAlchemy filter
         """
-        if not query:
-            return ''
+        # replace with default in function signature
+        #if not query:
+        #    return ''
 
         search_query = '%{0}%'.format(query)
         search_chain = (Strategy.name.ilike(search_query),
@@ -71,7 +72,7 @@ class Ticker(ResourceMixin, db.Model):
         super(Ticker, self).__init__(**kwargs)
 
     @classmethod
-    def search(cls, query):
+    def search(cls, query=''):
         """
         Search a resource by 1 or more fields.
 
@@ -79,8 +80,10 @@ class Ticker(ResourceMixin, db.Model):
         :type query: str
         :return: SQLAlchemy filter
         """
-        if not query:
-            return ''
+
+        # replace with default in function signature
+        #if not query:
+        #    return ''
 
         search_query = '%{0}%'.format(query)
         search_chain = (Ticker.tid.ilike(search_query))
