@@ -43,7 +43,7 @@ def login():
             # 1) Replace 'True' below with: request.form.get('remember', False)
             # 2) Uncomment the 'remember' field in user/forms.py#LoginForm
             # 3) Add a checkbox to the login form with the id/name 'remember'
-            if login_user(u, remember=True) and u.is_active():
+            if u.is_active() and login_user(u, remember=True):
                 u.update_activity_tracking(request.remote_addr)
 
                 # Handle optionally redirecting to the next URL safely.
@@ -65,9 +65,8 @@ def login():
 def logout():
     logout_user()
     flash('You have been logged out.', 'success')
-    #return redirect(url_for('user.login'))
+    # return redirect(url_for('user.login'))
     return redirect(url_for('page.home'))
-
 
 
 @user.route('/account/begin_password_reset', methods=['GET', 'POST'])
@@ -110,7 +109,7 @@ def password_reset():
 
 @user.route('/signup', methods=['GET', 'POST'])
 @anonymous_required()
-#@login_required # Don't allow sign up. For trial deploy only!!
+# @login_required # Don't allow sign up. For trial deploy only!!
 def signup():
     form = SignupForm()
 
@@ -156,7 +155,8 @@ def settings():
 @user.route('/settings/update_credentials', methods=['GET', 'POST'])
 @login_required
 def update_credentials():
-    form = UpdateCredentials(current_user, uid=current_user.id)
+
+    form = UpdateCredentials(obj=current_user)
 
     if form.validate_on_submit():
         new_password = request.form.get('password', '')

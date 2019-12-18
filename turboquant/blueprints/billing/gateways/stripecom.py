@@ -65,11 +65,13 @@ class Charge(object):
         :type amount: int
         :return: Stripe charge
         """
-        return stripe.Charge.create(
+        foo = stripe.Charge.create(
             amount=amount,
             currency=currency,
             customer=customer_id,
-            statement_descriptor='TURBOQUANT COINS')
+            statement_descriptor='SNAKEEYES COINS')
+
+        return foo
 
 
 class Coupon(object):
@@ -207,6 +209,25 @@ class Subscription(object):
         return customer.subscriptions.retrieve(subscription_id).delete()
 
 
+class Product(object):
+    @classmethod
+    def retrieve(cls, plan):
+        """
+        Retrieve an existing product.
+
+        API Documentation:
+          https://stripe.com/docs/api#retrieve_product
+
+        :param plan: Product identifier
+        :type plan: str
+        :return: Stripe product
+        """
+        try:
+            return stripe.Product.retrieve(plan)
+        except stripe.error.StripeError as e:
+            print(e)
+
+
 class Plan(object):
     @classmethod
     def retrieve(cls, plan):
@@ -236,7 +257,7 @@ class Plan(object):
         :return: Stripe plans
         """
         try:
-            return stripe.Plan.all()
+            return stripe.Plan.list()
         except stripe.error.StripeError as e:
             print(e)
 
@@ -271,15 +292,20 @@ class Plan(object):
         :return: Stripe plan
         """
         try:
+            product = {
+                "name": name,
+                "statement_descriptor": statement_descriptor
+            }
+
             return stripe.Plan.create(id=id,
-                                      name=name,
                                       amount=amount,
                                       currency=currency,
                                       interval=interval,
                                       interval_count=interval_count,
                                       trial_period_days=trial_period_days,
+                                      nickname=name,
                                       metadata=metadata,
-                                      statement_descriptor=statement_descriptor
+                                      product=product
                                       )
         except stripe.error.StripeError as e:
             print(e)
@@ -305,11 +331,17 @@ class Plan(object):
         """
         try:
             plan = stripe.Plan.retrieve(id)
-
-            plan.name = name
+            plan.nickname = name
             plan.metadata = metadata
-            plan.statement_descriptor = statement_descriptor
-            return plan.save()
+            product_id = plan.product
+            updated_plan = plan.save()
+
+            product = Product.retrieve(product_id)
+            product.name = name
+            product.statement_descriptor = statement_descriptor
+            product.save()
+
+            return updated_plan
         except stripe.error.StripeError as e:
             print(e)
 
@@ -327,6 +359,12 @@ class Plan(object):
         """
         try:
             plan = stripe.Plan.retrieve(plan)
-            return plan.delete()
+            product_id = plan.product
+            deleted_plan = plan.delete()
+
+            product = Product.retrieve(product_id)
+            product.delete()
+
+            return deleted_plan
         except stripe.error.StripeError as e:
             print(e)

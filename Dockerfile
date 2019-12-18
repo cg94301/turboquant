@@ -1,13 +1,10 @@
-FROM python:2.7-slim
-MAINTAINER Nick Janetakis <nick.janetakis@gmail.com>
+FROM python:3.7.5-slim-buster
+LABEL maintainer="Nick Janetakis <nick.janetakis@gmail.com>"
 
 RUN apt-get update && apt-get install -qq -y \
   build-essential libpq-dev --no-install-recommends
 
-ENV INSTALL_PATH /turboquant
-RUN mkdir -p $INSTALL_PATH
-
-WORKDIR $INSTALL_PATH
+WORKDIR /app
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt

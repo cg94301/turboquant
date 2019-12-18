@@ -13,6 +13,8 @@ class Bet(ResourceMixin, db.Model):
                                                   ondelete='CASCADE'),
                         index=True, nullable=False)
 
+    user = db.relationship('User')
+
     # Bet details.
     guess = db.Column(db.Integer())
     die_1 = db.Column(db.Integer())

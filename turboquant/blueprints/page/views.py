@@ -1,22 +1,22 @@
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template
 from turboquant.blueprints.page.forms import EmailForm
 
 page = Blueprint('page', __name__, template_folder='templates')
 
 
-#@page.route('/')
-#def index():
+# @page.route('/')
+# def index():
 #    return redirect(url_for('user.login'))
 
 @page.route('/', methods=['GET', 'POST'])
-#@page.route('/index/')
+# @page.route('/index/')
 def home():
 
     form = EmailForm()
 
     # Don't use label
     form.email.label.text = ''
-    
+
     return render_template('page/home.html', form=form)
 
 

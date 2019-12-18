@@ -162,6 +162,8 @@ class TestInvoice(object):
                                     'livemode': False,
                                     'interval_count': 1,
                                     'trial_period_days': 14,
+                                    'nickname': 'Gold',
+                                    'product': 'prod_000',                                    
                                     'metadata': {},
                                     'statement_descriptor': 'GOLD MONTHLY'
                                 },

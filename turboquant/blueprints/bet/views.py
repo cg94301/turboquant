@@ -23,7 +23,7 @@ def before_request():
 @coins_required
 @limiter.limit('3/second')
 def place_bet():
-    print "***DEBUG***:",request
+    print("***DEBUG***:", request)
     if request.method == 'GET':
         recent_bets = Bet.query.filter(Bet.user_id == current_user.id) \
             .order_by(Bet.created_on.desc()).limit(10)

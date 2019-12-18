@@ -18,6 +18,7 @@ from turboquant.blueprints.billing.gateways.stripecom import (
     Event as PaymentEvent,
     Card as PaymentCard,
     Subscription as PaymentSubscription,
+    Product as PaymentProduct,
     Invoice as PaymentInvoice,
     Customer as PaymentCustomer,
     Charge as PaymentCharge
@@ -313,6 +314,14 @@ def mock_stripe():
     PaymentCustomer.create = Mock(return_value=json.loads(customer_api,
                                                           object_hook=AtoD))
 
+    product_api = {
+        "id": "prod_000",
+        "type": "service",
+        "name": "gold",
+        "statement_descriptor": "GOLD MONTHLY"
+    }
+    PaymentProduct.retrieve = Mock(return_value=product_api)    
+    
     upcoming_invoice_api = {
         'date': 1433018770,
         'id': 'in_000',
@@ -347,7 +356,8 @@ def mock_stripe():
                         'trial_period_days': 14,
                         'metadata': {
                         },
-                        'statement_descriptor': 'GOLD MONTHLY'
+                        'nickname': 'Gold',
+                        'product': 'prod_000',
                     },
                     'description': None,
                     'discountable': True,

@@ -4,7 +4,7 @@ from collections import OrderedDict
 from random import choice
 
 import pytz
-from sqlalchemy import or_, and_
+from sqlalchemy import or_, and_, text
 
 from sqlalchemy.ext.hybrid import hybrid_property
 
@@ -71,8 +71,8 @@ class Coupon(ResourceMixin, db.Model):
         :type query: str
         :return: SQLAlchemy filter
         """
-        if not query:
-            return ''
+        if query == '':
+            return text('')
 
         search_query = '%{0}%'.format(query)
 

@@ -23,6 +23,8 @@ class Subscription(ResourceMixin, db.Model):
                                                   ondelete='CASCADE'),
                         index=True, nullable=False)
 
+    user = db.relationship('User')
+
     # Subscription details.
     plan = db.Column(db.String(128))
     coupon = db.Column(db.String(128))

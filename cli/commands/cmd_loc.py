@@ -14,7 +14,7 @@ def count_locs(file_type, comment_pattern):
     :return: str
     """
     find = "find . -name '*.{0}' -print0".format(file_type)
-    sed_pattern = "'/^\s*{0}/d;/^\s*$/d'".format(comment_pattern)
+    sed_pattern = r"'/^\s*{0}/d;/^\s*$/d'".format(comment_pattern)
 
     cmd = "{0} | xargs -0 sed {1} | wc -l".format(find, sed_pattern)
 
@@ -31,8 +31,8 @@ def cli():
     file_types = (
         ['Python', 'py', '#'],
         ['HTML', 'html', '<!--'],
-        ['CSS', 'css', '\/\*'],
-        ['JS', 'js', '\/\/']
+        ['CSS', 'css', r'\/\*'],
+        ['JS', 'js', r'\/\/']
     )
 
     click.echo('Lines of code\n-------------')

@@ -29,9 +29,9 @@ def allowed_file(filename):
 
 S3_BUCKET = 'cgiam.sagemaker'
 
-s3 = boto3.client("s3")
-client = boto3.client('lambda')
-sfn = boto3.client('stepfunctions')
+s3 = boto3.client("s3", region_name='us-west-2')
+client = boto3.client('lambda', region_name='us-west-2')
+sfn = boto3.client('stepfunctions', region_name='us-west-2')
 
 def upload_file_to_s3(file, bucket_name, uid, acl="public-read"):
 
@@ -69,12 +69,12 @@ def dashboard():
 @quant.route('/data/page/<int:page>', methods=['GET'])
 def data(page):
 
-    print "*** debug", request
-    print "*** debug", request.method
-    print "*** debug", request.form.viewkeys()
-    print "*** debug", request.form.keys()
-    print "*** debug", 'upload' in request.form.keys()
-    print "*** debug", 'update' in request.form.keys()
+    print("*** debug", request)
+    print("*** debug", request.method)
+    print("*** debug", request.form.viewkeys())
+    print("*** debug", request.form.keys())
+    print("*** debug", 'upload' in request.form.keys())
+    print("*** debug", 'update' in request.form.keys())
     
     # Use basic form for CSRF token
     form = Form()
@@ -101,11 +101,11 @@ def tickers_upload():
     form = Form()
     
     
-    print "upload"
-    print "user_file", request.files.getlist('user_file')
+    print("upload")
+    print("user_file", request.files.getlist('user_file'))
         
     for uf in request.files.getlist('user_file'):
-        print "uf:",uf
+        print("uf:",uf)
 
         file = uf
         
@@ -134,8 +134,8 @@ def tickers_upload():
     #elif 'update' in request.form.keys():
 
     payload = json.dumps({"uid":current_user.id})
-    print "*** debug payload:%s" % payload
-    print "*** debug", type(payload)
+    print("*** debug payload:%s" % payload)
+    print("*** debug", type(payload))
     payloadb = str.encode(payload)
                     
 
@@ -145,10 +145,10 @@ def tickers_upload():
     )
     
     tickercloud = response['Payload'].read()
-    print "***debug respone:", tickercloud
-    print "***debug type:", type(tickercloud)
+    print("***debug respone:", tickercloud)
+    print("***debug type:", type(tickercloud))
     tickercloudd = json.loads(tickercloud)
-    print "*** debug", type(tickercloudd)
+    print("*** debug", type(tickercloudd))
     #print "*** debug", type(tickercloudd[0])
     #print "*** debug", tickercloudd[0]
                     
@@ -158,22 +158,22 @@ def tickers_upload():
     # Ticker.query.delete()
 
     tickercloud_names = [s[0] for s in tickercloudd]
-    print "tickercloud_names", tickercloud_names
+    print("tickercloud_names", tickercloud_names)
 
     tickerdb = Ticker.query.filter(Ticker.user_id == current_user.id)
     tickerdb_names = [s.tid for s in tickerdb.all()]
-    print "tickerdb_names", tickerdb_names
+    print("tickerdb_names", tickerdb_names)
 
     # tickercloud: [["AAPL", 233285, "2018-09-08T16:53:24+00:00"], ["ORCL", 197427, "2018-09-08T18:15:59+00:00"], ["SBUX", 226567, "2018-09-08T15:11:44+00:00"]]
     for tic in tickercloudd:
-        print "debug: updating ", tic[0]
+        print("debug: updating ", tic[0])
 
         # are there any tickers in DB that were removed from cloud?
         if tic[0] in tickerdb_names:
             tickerdb_names.remove(tic[0])
 
         x = tickerdb.filter(Ticker.tid==tic[0]).first()
-        print "x",x
+        print("x",x)
         if x:
             #x.tid = tic[0]
             x.size = tic[1]
@@ -184,7 +184,7 @@ def tickers_upload():
 
         #db.session.add(Ticker(user_id=current_user.id, tid=tid,size=size,lastmodified=lastmodified))
 
-    print "tickerdb_names minus cloud:", tickerdb_names
+    print("tickerdb_names minus cloud:", tickerdb_names)
 
     for tic in tickerdb_names:
         x = tickerdb.filter(Ticker.tid==tic).first()
@@ -211,7 +211,7 @@ def tickers_bulk_delete():
             ids = request.form.getlist('bulk_ids')        
         
         if 'skip' in request.form:
-            print "Skip IDS:", ids
+            print("Skip IDS:", ids)
             
             tickersq = Ticker.query.filter(Ticker.user_id == current_user.id)
             for id in ids:
@@ -220,11 +220,11 @@ def tickers_bulk_delete():
                     x.skip = False
                 else:
                     x.skip = not x.skip
-                print "x",x
+                print("x",x)
             db.session.commit()
 
         if 'delete' in request.form:
-            print "Deleting IDS:", ids        
+            print("Deleting IDS:", ids)
 
         flash('{0} ticker(s) were scheduled to be deleted.'.format(len(ids)),
               'success')
@@ -260,7 +260,7 @@ def strategies_bulk_delete():
             ids = request.form.getlist('bulk_ids')
 
         if 'portfolio' in request.form:
-            print "Portfolio IDS:", ids
+            print("Portfolio IDS:", ids)
             
             strategiesq = Strategy.query.filter(Strategy.user_id == current_user.id)
             for id in ids:
@@ -269,11 +269,11 @@ def strategies_bulk_delete():
                     x.portfolio = False
                 else:
                     x.portfolio = not x.portfolio
-                print "x",x
+                print("x",x)
             db.session.commit()
 
         if 'delete' in request.form:
-            print "Deleting IDS:", ids
+            print("Deleting IDS:", ids)
 
         flash('{0} strategies were scheduled to be deleted.'.format(len(ids)),
               'success')
@@ -284,10 +284,10 @@ def strategies_bulk_delete():
 
 @quant.route('/generate/', methods=['GET','POST'])
 def generate():
-    print "configuration:",request
-    print "configuration:",request.form
-    print "configuration:",request.form.get('csrf_token')
-    print "current_user:",current_user.id
+    print("configuration:",request)
+    print("configuration:",request.form)
+    print("configuration:",request.form.get('csrf_token'))
+    print("current_user:",current_user.id)
     # Pre-populate the email field if the user is signed in.
     #form = XGBForm(obj=current_user)
     form = XGBForm()
@@ -320,8 +320,8 @@ def generate():
         # move preprocess into data step.
         
         payload = json.dumps({"uid":current_user.id, "params":params})
-        print "*** debug payload:%s" % payload
-        print "*** debug", type(payload)
+        print("*** debug payload:%s" % payload)
+        print("*** debug", type(payload))
         payloadb = str.encode(payload)        
         
         task = launch_batch_job.delay(current_user.id, params)
@@ -342,8 +342,8 @@ def generate():
 @quant.route('/strategies/page/<int:page>', methods=['GET','POST'])
 def strategies(page):
 
-    print "*** debug", request.method
-    print "*** debug", request.form
+    print("*** debug", request.method)
+    print("*** debug", request.form)
 
     # Use basic form for CSRF token
     form = Form()
@@ -366,10 +366,10 @@ def strategies(page):
         strategies = Strategy.query.filter(Strategy.user_id == uid)
 
         jobids = [job.name for job in strategies]
-        print "*** debug jobids:", jobids
+        print("*** debug jobids:", jobids)
         payload = json.dumps({"jobs":jobids})
-        print "*** debug payload:%s" % payload
-        print "*** debug", type(payload)
+        print("*** debug payload:%s" % payload)
+        print("*** debug", type(payload))
         payloadb = str.encode(payload)
 
         #client = boto3.client('lambda', region_name='us-west-2')
@@ -380,16 +380,16 @@ def strategies(page):
         )
 
         stats = response['Payload'].read()
-        print "***debug respone:", stats
-        print "***debug type:", type(stats)
+        print("***debug respone:", stats)
+        print("***debug type:", type(stats))
         statsd = json.loads(stats)
 
         for stat in statsd:
         
             jobid_out = stat['jobid']
-            print "***jobid:", jobid_out
+            print("***jobid:", jobid_out)
             status_out = stat['status']
-            print "***debug status:", status_out
+            print("***debug status:", status_out)
 
             # find if exists and update.
             q = Strategy.query.filter_by(name=jobid_out).first()
@@ -398,11 +398,11 @@ def strategies(page):
             # outpuf from SFN is json encoded string
             if 'output' in stat:
                 outputd = json.loads(stat['output'])
-                print outputd
-                print type(outputd)
+                print(outputd)
+                print(type(outputd))
                 outputd = outputd['train']
                 auc_out = outputd['stats']['auc']
-                print "***debug:", auc_out
+                print("***debug:", auc_out)
                 q.auc = auc_out
 
                 precision_out = outputd['stats']['precision']
@@ -425,7 +425,7 @@ def strategies(page):
     search_form = SearchForm()    
     bulk_form = BulkDeleteForm()
 
-    print "request:",request.args.keys()
+    print("request:",request.args.keys())
     
     sort_by = Strategy.sort_by(request.args.get('sort', 'created_on'),
                            request.args.get('direction', 'desc'))
@@ -452,25 +452,25 @@ def portfolio():
     if request.method == 'POST':
 
         if 'retrieve' in request.form:
-            print "retrieve"
+            print("retrieve")
 
             try:
                 # Download equity curve file from S3.
                 s3.download_file(S3_BUCKET, 'u' + str(uid) + '/data/turboquant.py', '/tmp/turboquant.' + str(uid) + '.py')   
             except:
-                print "not ready"
+                print("not ready")
                 compile_busy = True
                 #flash('Compile not ready. Try again a bit later.')
-                print "Oops! ",sys.exc_info()
+                print("Oops! ",sys.exc_info())
                 #return redirect(url_for('quant.portfolio'))
 
 
-            print "debug. retrieve continues."
+            print("debug. retrieve continues.")
             
             try:
                 return send_file('/tmp/turboquant.1.py', as_attachment=True, attachment_filename='turboquant.py')
             except:
-                print "Oops! ",sys.exc_info()            
+                print("Oops! ",sys.exc_info())
 
 
         if 'compile' in request.form:
@@ -478,17 +478,17 @@ def portfolio():
             # Delete Strategy first from AWS.
             try:
                 response = s3.delete_object(Bucket=S3_BUCKET, Key='u' + str(uid) + '/data/turboquant.py')
-                print "delete response:", response
+                print("delete response:", response)
             except:
-                print "Strategy delete error: " , sys.exc_info()
+                print("Strategy delete error: " , sys.exc_info())
 
             # Delete Strategy from local.
             try:
                 os.remove('/tmp/turboquant.' + str(uid) + '.py')
             except:
-                print "Strategy local remove error: " , sys.exc_info()        
+                print("Strategy local remove error: " , sys.exc_info())
         
-            print "Compiling portfolio:"
+            print("Compiling portfolio:")
 
             # { "data": {
             #     "uid": 1,
@@ -510,7 +510,7 @@ def portfolio():
             selectedq = Strategy.query.filter(and_(Strategy.user_id == uid, Strategy.portfolio == True)).all()
             
             selected = [(t.name,t.ticker) for t in selectedq]
-            print "portfolio strategies:", selected
+            print("portfolio strategies:", selected)
     
 
             #jobs = [("1-3zr381lryj","SBUX"),("1-89suhahgfk","ORCL"),("1-c0xd1m5j6n","CVX"),("1-dtq58uj5im","AAPL")]
@@ -527,11 +527,11 @@ def portfolio():
                 #name=sfnid
             )
 
-            print "tqmake: ", response            
+            print("tqmake: ", response)
 
             
         if 'backtest' in request.form:
-            print "backtest"
+            print("backtest")
 
             from turboquant.blueprints.quant.tasks import launch_backtest
 
@@ -548,7 +548,7 @@ def portfolio():
 
             params = {"uid":uid, "portfolio":dict(selected)}
 
-            print "params:",params
+            print("params:",params)
             payload = json.dumps(params)
             payloadb = str.encode(payload)
 
@@ -559,14 +559,14 @@ def portfolio():
 
             stats = response['Payload'].read()
             statsd = json.loads(stats)
-            print type(statsd)
-            print "stats:", statsd
+            print(type(statsd))
+            print("stats:", statsd)
             find = statsd['fin']
             
             # Update Portfolio DB with stats if entry exists.
             # Otherwise create new entry.
             portfolio = Portfolio.query.filter(Portfolio.user_id == current_user.id).first()
-            print "portfolio post db:", portfolio
+            print("portfolio post db:", portfolio)
             if portfolio:
                 portfolio.sharpe = find['sharpe']
                 portfolio.sortino = find['sortino']
@@ -599,8 +599,8 @@ def portfolio():
             
     # Query portfolio
     portfolio = Portfolio.query.filter(Portfolio.user_id == current_user.id).first()
-    print type(portfolio)
-    print "portfolio db:", portfolio
+    print(type(portfolio))
+    print("portfolio db:", portfolio)
                     
     return render_template('quant/page/portfolio.html', form=form, portfolio=portfolio, compile_busy=compile_busy)
 
@@ -635,17 +635,17 @@ def compile():
     # Delete Strategy first from AWS.
     try:
         response = s3.delete_object(Bucket=S3_BUCKET, Key='u' + str(uid) + '/data/turboquant.py')
-        print "delete response:", response
+        print("delete response:", response)
     except:
-        print "Strategy delete error: " , sys.exc_info()
+        print("Strategy delete error: " , sys.exc_info())
 
     # Delete Strategy from local.
     try:
         os.remove('/tmp/turboquant.' + str(uid) + '.py')
     except:
-        print "Strategy local remove error: " , sys.exc_info()        
+        print("Strategy local remove error: " , sys.exc_info())
         
-    print "Compiling portfolio:"
+    print("Compiling portfolio:")
 
     # { "data": {
     #     "uid": 1,
@@ -667,7 +667,7 @@ def compile():
     selectedq = Strategy.query.filter(and_(Strategy.user_id == uid, Strategy.portfolio == True)).all()
 
     selected = [(t.name,t.ticker) for t in selectedq]
-    print "portfolio strategies:", selected
+    print("portfolio strategies:", selected)
     
 
     #jobs = [("1-3zr381lryj","SBUX"),("1-89suhahgfk","ORCL"),("1-c0xd1m5j6n","CVX"),("1-dtq58uj5im","AAPL")]
@@ -684,7 +684,7 @@ def compile():
         #name=sfnid
     )
 
-    print "tqmake: ", response
+    print("tqmake: ", response)
     
     return redirect(url_for('quant.portfolio'))
 
@@ -693,7 +693,7 @@ def compile():
 def retrieve():
 
 
-    print "Retrieving Strategy:"
+    print("Retrieving Strategy:")
 
     uid = current_user.id
 
@@ -702,15 +702,15 @@ def retrieve():
         # Download equity curve file from S3.
         s3.download_file(S3_BUCKET, 'u' + str(uid) + '/data/turboquant.py', '/tmp/turboquant.' + str(uid) + '.py')   
     except:
-        print "not ready"
+        print("not ready")
         flash('Compile not ready. Try again a bit later.')
-        print "Oops! ",sys.exc_info()
+        print("Oops! ",sys.exc_info())
         #return redirect(url_for('quant.portfolio'))
 
     
     try:
         return send_file('/tmp/turboquant.1.py')
     except:
-        print "Oops! ",sys.exc_info()
+        print("Oops! ",sys.exc_info())
         
     #return redirect(url_for('quant.portfolio'))

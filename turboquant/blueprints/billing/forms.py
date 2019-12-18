@@ -1,4 +1,4 @@
-from flask_wtf import Form
+from flask_wtf import FlaskForm
 from wtforms import StringField, HiddenField, SelectField
 from wtforms.validators import DataRequired, Optional, Length
 
@@ -20,7 +20,7 @@ def choices_from_coin_bundles():
     return choices
 
 
-class SubscriptionForm(Form):
+class SubscriptionForm(FlaskForm):
     stripe_key = HiddenField('Stripe publishable key',
                              [DataRequired(), Length(1, 254)])
     plan = HiddenField('Plan',
@@ -31,16 +31,16 @@ class SubscriptionForm(Form):
                        [DataRequired(), Length(1, 254)])
 
 
-class UpdateSubscriptionForm(Form):
+class UpdateSubscriptionForm(FlaskForm):
     coupon_code = StringField('Do you have a coupon code?',
                               [Optional(), Length(1, 254)])
 
 
-class CancelSubscriptionForm(Form):
+class CancelSubscriptionForm(FlaskForm):
     pass
 
 
-class PaymentForm(Form):
+class PaymentForm(FlaskForm):
     stripe_key = HiddenField('Stripe publishable key',
                              [DataRequired(), Length(1, 254)])
     coin_bundles = SelectField('How many coins do you want?', [DataRequired()],

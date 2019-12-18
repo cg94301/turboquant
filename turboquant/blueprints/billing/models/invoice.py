@@ -1,6 +1,6 @@
 import datetime
 
-from sqlalchemy import or_
+from sqlalchemy import or_, text
 
 from lib.util_sqlalchemy import ResourceMixin
 from turboquant.extensions import db
@@ -9,7 +9,8 @@ from turboquant.blueprints.billing.models.coupon import Coupon
 from turboquant.blueprints.billing.gateways.stripecom import (
     Customer as PaymentCustomer,
     Charge as PaymentCharge,
-    Invoice as PaymentInvoice
+    Invoice as PaymentInvoice,
+    Product as PaymentProduct
 )
 
 
@@ -22,6 +23,7 @@ class Invoice(ResourceMixin, db.Model):
                                                   onupdate='CASCADE',
                                                   ondelete='CASCADE'),
                         index=True, nullable=False)
+    user = db.relationship('User')
 
     # Invoice details.
     plan = db.Column(db.String(128), index=True)
@@ -55,8 +57,8 @@ class Invoice(ResourceMixin, db.Model):
         """
         from turboquant.blueprints.user.models import User
 
-        if not query:
-            return ''
+        if query == '':
+            return text('')
 
         search_query = '%{0}%'.format(query)
         search_chain = (User.email.ilike(search_query),
@@ -79,11 +81,13 @@ class Invoice(ResourceMixin, db.Model):
         period_end_on = datetime.datetime.utcfromtimestamp(
             data['lines']['data'][0]['period']['end']).date()
 
+        product = PaymentProduct.retrieve(plan_info['product'])
+
         invoice = {
             'payment_id': data['customer'],
-            'plan': plan_info['name'],
+            'plan': plan_info['nickname'],
             'receipt_number': data['receipt_number'],
-            'description': plan_info['statement_descriptor'],
+            'description': product['statement_descriptor'],
             'period_start_on': period_start_on,
             'period_end_on': period_end_on,
             'currency': data['currency'],
@@ -95,20 +99,24 @@ class Invoice(ResourceMixin, db.Model):
         return invoice
 
     @classmethod
-    def parse_from_api(cls, payload):
+    def parse_from_api(cls, invoice):
         """
         Parse and return the invoice information we are interested in.
 
+        :param invoice: Stripe invoice result
+        :type invoice: dict
         :return: dict
         """
-        plan_info = payload['lines']['data'][0]['plan']
-        date = datetime.datetime.utcfromtimestamp(payload['date'])
+        plan_info = invoice['lines']['data'][0]['plan']
+        date = datetime.datetime.utcfromtimestamp(invoice['date'])
+
+        product = PaymentProduct.retrieve(plan_info['product'])
 
         invoice = {
-            'plan': plan_info['name'],
-            'description': plan_info['statement_descriptor'],
+            'plan': plan_info['nickname'],
+            'description': product['statement_descriptor'],
             'next_bill_on': date,
-            'amount_due': payload['amount_due'],
+            'amount_due': invoice['amount_due'],
             'interval': plan_info['interval']
         }
 

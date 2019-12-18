@@ -4,7 +4,7 @@ from hashlib import md5
 
 import pytz
 from flask import current_app
-from sqlalchemy import or_
+from sqlalchemy import or_, text
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from flask_login import UserMixin
@@ -31,15 +31,15 @@ class User(UserMixin, ResourceMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     # Relationships.
-    credit_card = db.relationship(CreditCard, uselist=False, backref='users',
+    credit_card = db.relationship(CreditCard, uselist=False, backref='credit_card',
                                   passive_deletes=True)
     subscription = db.relationship(Subscription, uselist=False,
-                                   backref='users', passive_deletes=True)
-    invoices = db.relationship(Invoice, backref='users', passive_deletes=True)
+                                   backref='subscription', passive_deletes=True)
+    invoices = db.relationship(Invoice, backref='invoices', passive_deletes=True)
     bets = db.relationship(Bet, backref='bets', passive_deletes=True)
 
     strategies = db.relationship(Strategy, backref='strategies', passive_deletes=True)
-    
+
     # Authentication.
     role = db.Column(db.Enum(*ROLE, name='role_types', native_enum=False),
                      index=True, nullable=False, server_default='member')
@@ -150,8 +150,8 @@ class User(UserMixin, ResourceMixin, db.Model):
         :type query: str
         :return: SQLAlchemy filter
         """
-        if not query:
-            return ''
+        if query == '':
+            return text('')
 
         search_query = '%{0}%'.format(query)
         search_chain = (User.email.ilike(search_query),
@@ -172,15 +172,15 @@ class User(UserMixin, ResourceMixin, db.Model):
         :type new_active: bool
         :return: bool
         """
-        is_changing_roles = user.role == 'admin' and new_role != 'admin'
+        is_demoting_admin = user.role == 'admin' and new_role != 'admin'
         is_changing_active = user.active is True and new_active is None
+        admin_count = User.query.filter(User.role == 'admin').count()
 
-        if is_changing_roles or is_changing_active:
-            admin_count = User.query.filter(User.role == 'admin').count()
-            active_count = User.query.filter(User.is_active is True).count()
+        if is_demoting_admin and admin_count == 1:
+            return True
 
-            if admin_count == 1 or active_count == 1:
-                return True
+        if is_changing_active and user.role == 'admin' and admin_count == 1:
+            return True
 
         return False
 

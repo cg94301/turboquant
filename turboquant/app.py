@@ -4,10 +4,10 @@ from logging.handlers import SMTPHandler
 
 import stripe
 
-from werkzeug.contrib.fixers import ProxyFix
+from werkzeug.middleware.proxy_fix import ProxyFix
+from werkzeug.debug import DebuggedApplication
 from flask import Flask, render_template
 from celery import Celery
-from itsdangerous import URLSafeTimedSerializer
 
 from turboquant.blueprints.admin import admin
 from turboquant.blueprints.quant import quant
@@ -98,6 +98,9 @@ def create_app(settings_override=None):
     extensions(app)
     authentication(app, User)
 
+    if app.debug:
+        app.wsgi_app = DebuggedApplication(app.wsgi_app, evalex=True)
+
     return app
 
 
@@ -145,16 +148,6 @@ def authentication(app, user_model):
     @login_manager.user_loader
     def load_user(uid):
         return user_model.query.get(uid)
-
-    @login_manager.token_loader
-    def load_token(token):
-        duration = app.config['REMEMBER_COOKIE_DURATION'].total_seconds()
-        serializer = URLSafeTimedSerializer(app.secret_key)
-
-        data = serializer.loads(token, max_age=duration)
-        user_uid = data[0]
-
-        return user_model.query.get(user_uid)
 
 
 def middleware(app):

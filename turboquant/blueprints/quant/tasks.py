@@ -29,12 +29,12 @@ def launch_xgb_job(id, num_round, max_depth, eta):
     :type user_id: str
     :return: None
     """
-    print "id:",id
-    print "num_round:",num_round
-    print "max_depth:",max_depth
-    print "eta:",eta
+    print("id:",id)
+    print("num_round:",num_round)
+    print("max_depth:",max_depth)
+    print("eta:",eta)
 
-    client = boto3.client('lambda')
+    client = boto3.client('lambda', region_name='us-west-2')
     params = {'id':id, 'num_round':num_round, 'max_depth':max_depth, 'eta':eta}
     payload = json.dumps(params)
     payloadb = str.encode(payload)
@@ -48,7 +48,7 @@ def launch_xgb_job(id, num_round, max_depth, eta):
         Payload=payloadb,
     )
 
-    print "response:",response
+    print("response:",response)
 
 
     
@@ -57,7 +57,7 @@ def launch_xgb_job(id, num_round, max_depth, eta):
 @celery.task()
 def launch_backtest(uid):
 
-    client = boto3.client('lambda')
+    client = boto3.client('lambda', region_name='us-west-2')
     
     selectedq = Strategy.query.filter(and_(Strategy.user_id == uid, Strategy.portfolio == True)).all()
 
@@ -66,7 +66,7 @@ def launch_backtest(uid):
 
     params = {"uid":uid, "portfolio":dict(selected)}
 
-    print "params:",params
+    print("params:",params)
     payload = json.dumps(params)
     payloadb = str.encode(payload)
 
@@ -76,26 +76,26 @@ def launch_backtest(uid):
     )
 
     rs = response['Payload']
-    print "stats:",rs
+    print("stats:",rs)
     
 @celery.task()
 def launch_batch_job(uid,params):
 
     # ML params
     # raw parameter ranges
-    print "params:",params
+    print("params:",params)
 
     # Run ML for all tickers that are not skipped
     # Note: Get tickers live when task actually executes in queue.
     tickersq = Ticker.query.filter(and_(Ticker.user_id == uid, Ticker.skip == False)).all()
     tickers = [t.tid for t in tickersq]
-    print "task tickers:", tickers
+    print("task tickers:", tickers)
 
     # Step 1:
     # PREPROCESS CSV
     # do preprocessing for all tickers here
 
-    client = boto3.client('lambda')
+    client = boto3.client('lambda', region_name='us-west-2')
     payload = {"uid": uid, "seed":"", "tickers":tickers}
     payloads = json.dumps(payload)
     payloadb = str.encode(payloads)
@@ -110,7 +110,7 @@ def launch_batch_job(uid,params):
     # seed can be reused for debug purposes
     rs = response['Payload']
     rseed = rs.read()
-    print "rseed:", rseed
+    print("rseed:", rseed)
 
     # Step 2:
     # Create all permuatations from provided ranges
@@ -122,19 +122,19 @@ def launch_batch_job(uid,params):
     max_depth_to = int(params['max_depth_to'])
     eta_from = float(params['eta_from'])
     eta_to = float(params['eta_to'])
-    print type(num_round_from)
+    print(type(num_round_from))
 
     num_round = [num_round_from, num_round_to]
     num_round_max = max(num_round)
     num_round_min = min(num_round)
     num_round_range = range(num_round_min, num_round_max+1, num_round_step)
-    print num_round_range
+    print(num_round_range)
     
     max_depth = [max_depth_from, max_depth_to]
     max_depth_max = max(max_depth)
     max_depth_min = min(max_depth)
     max_depth_range = range(max_depth_min, max_depth_max+1, 1)
-    print max_depth_range
+    print(max_depth_range)
 
 
     # translate from float to exponent
@@ -148,14 +148,14 @@ def launch_batch_job(uid,params):
     #print eta_lookup[eta_min]
 
     eta_range =[ 10** exponent for exponent in range(eta_lookup[eta_min], eta_lookup[eta_max]+1)]
-    print eta_range
+    print(eta_range)
     
     ticker_range = tickers
-    print ticker_range
+    print(ticker_range)
 
     comb = list(itertools.product(ticker_range,num_round_range,max_depth_range,eta_range))
-    print "You have configured %s strategies:" % len(comb)
-    print comb
+    print("You have configured %s strategies:" % len(comb))
+    print(comb)
 
 
     #jobid = get_jobid(uid,10)
@@ -164,8 +164,8 @@ def launch_batch_job(uid,params):
 
     # Give every job an identifier.
     comb_id = [ (get_jobid(uid,10),) + job for job in comb ]
-    print "Running the following jobs:"
-    print comb_id
+    print("Running the following jobs:")
+    print(comb_id)
 
     # This is how jobs look like. List of tuples.
     # [('1-zgmyrhbh', u'CVX', 400, 1, 0.1), ('1-1tdntl4m', u'CVX', 400, 2, 0.1), ('1-g8zaebpf', u'CVX', 400, 3, 0.1), ('1-j06euwhm', u'AAPL', 400, 1, 0.1), ('1-v5qm5xv6', u'AAPL', 400, 2, 0.1), ('1-3oudkvz9', u'AAPL', 400, 3, 0.1)]
@@ -182,7 +182,7 @@ def launch_batch_job(uid,params):
     # why use specific SFN ID? REQUIRED. BREAKS IF generic ID is used.
     sfnid = get_jobid(uid,12)
     
-    client = boto3.client('stepfunctions')
+    client = boto3.client('stepfunctions', region_name='us-west-2')
     params = {"batch": {"uid": uid, "jobs":comb_id, "batch_size":batch_size, "active":[], "all_done": False, "any_done": False, "wait_time": wait_time, "seed": rseed}}
     payload = json.dumps(params)
     payloadb = str.encode(payload)
@@ -194,7 +194,7 @@ def launch_batch_job(uid,params):
             name=sfnid
         )
 
-        print "launched tqbatch:", response['executionArn']
+        print("launched tqbatch:", response['executionArn'])
         # write to DB. pending jobs.
         # this does not use session. instead uses class method.
         jobs = []
@@ -217,7 +217,7 @@ def launch_batch_job(uid,params):
             
             # launched w/ delay. no return value.
     except:
-        print "Launch failed!"
+        print("Launch failed!")
     
     return None
 
@@ -232,10 +232,10 @@ def launch_sfn_job(id, ticker, num_round, max_depth, eta):
     :type user_id: str
     :return: None
     """
-    print "id:",id
-    print "num_round:",num_round
-    print "max_depth:",max_depth
-    print "eta:",eta
+    print("id:",id)
+    print("num_round:",num_round)
+    print("max_depth:",max_depth)
+    print("eta:",eta)
 
 
     #seed = randint(0, 4294967295)
@@ -244,13 +244,13 @@ def launch_sfn_job(id, ticker, num_round, max_depth, eta):
     code = ''.join(random.choice('0123456789abcdefghijklmnopqrstuvwxyz') for i in range(8))
     name = str(id) + '-' + str(code)
     
-    print "name:",name
+    print("name:",name)
 
     seed = None
     wait_time = 20
-    print "seed:",seed
+    print("seed:",seed)
     
-    client = boto3.client('stepfunctions')
+    client = boto3.client('stepfunctions', region_name='us-west-2')
     params = {'uid': id, 'id':name, 'ticker':ticker, 'num_round': num_round,'max_depth': max_depth, 'eta': eta, 'wait_time': wait_time, 'seed': seed}
     payload = json.dumps(params)
     payloadb = str.encode(payload)
@@ -265,7 +265,7 @@ def launch_sfn_job(id, ticker, num_round, max_depth, eta):
         name=name
     )
 
-    print "response:",response
+    print("response:",response)
 
     # this is the response from CLI invocation
 
@@ -296,10 +296,10 @@ def describe_jobs(id):
            .filter(Strategy.user_id == id)
 
     arns = [arn.execution_arn for arn in strategies_arn]
-    print "*** debug", arns
+    print("*** debug", arns)
     payload = json.dumps(arns)
-    print "*** debug:%s" % payload
-    print "*** debug", type(payload)
+    print("*** debug:%s" % payload)
+    print("*** debug", type(payload))
     payloadb = str.encode(payload)
 
     # why is region not found from .aws ??
@@ -310,4 +310,4 @@ def describe_jobs(id):
         Payload=payloadb,
     )
 
-    print "*** debug", response    
+    print("*** debug", response)

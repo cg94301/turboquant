@@ -95,3 +95,21 @@ and
 
 if 'form1' in request.form:
 but you could also use a <input type="hidden"> field to include the means to distinguish between forms.
+
+
+**************
+Query db:
+docker-compose exec postgres psql -U turboquant turboquant
+
+\dt
+select email,is_active from users;
+
+
+*************
+New DB version. Remove the volume the DB is stored in on the host.
+
+docker volume ls
+docker volume rm turboquant_postgres
+
+delete all volumes:
+docker-compose down -v  

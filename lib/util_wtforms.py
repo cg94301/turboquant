@@ -1,23 +1,18 @@
-from flask_wtf import Form
+from flask_wtf import FlaskForm
+from wtforms_alchemy import model_form_factory
+
+from turboquant.extensions import db
+
+BaseModelForm = model_form_factory(FlaskForm)
 
 
-class ModelForm(Form):
+class ModelForm(BaseModelForm):
     """
-    wtforms_components exposes ModelForm but their ModelForm does not inherit
-    from flask_wtf's Form, but instead WTForm's Form.
-
-    However, in order to get CSRF protection handled by default we need to
-    inherit from flask_wtf's Form. So let's just copy his class directly.
-
-    We modified it by removing the format argument so that wtforms_component
-    uses its own default which is to pass in request.form automatically.
+    Allow WTForms-Alchemy to work with Flask-WTF.
     """
-    def __init__(self, obj=None, prefix='', **kwargs):
-        Form.__init__(
-            self, obj=obj, prefix=prefix, **kwargs
-        )
-        self._obj = obj
-
+    @classmethod
+    def get_session(self):
+        return db.session        
 
 def choices_from_dict(source, prepend_blank=True):
     """

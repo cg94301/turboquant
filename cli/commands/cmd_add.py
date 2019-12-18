@@ -163,7 +163,7 @@ def invoices():
             period_start_on = fake.date_time_between(
                 start_date='now', end_date='+1y').strftime('%s')
             period_end_on = fake.date_time_between(
-                start_date=period_start_on, end_date='+14d').strftime('%s')
+                start_date='now', end_date='+14d').strftime('%s')
             exp_date = fake.date_time_between(
                 start_date='now', end_date='+2y').strftime('%s')
 
