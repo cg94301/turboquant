@@ -4,3 +4,4 @@
 **.whl
 venv/
 celerybeat-schedule
+.cache/
