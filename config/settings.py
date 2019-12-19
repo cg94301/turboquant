@@ -1,25 +1,33 @@
 from datetime import timedelta
+import os
+
+from datetime import timedelta
+from distutils.util import strtobool
 
 from celery.schedules import crontab
 
 
-DEBUG = True
-LOG_LEVEL = 'DEBUG'  # CRITICAL / ERROR / WARNING / INFO / DEBUG
+LOG_LEVEL = os.getenv('LOG_LEVEL', 'DEBUG')
 
-SERVER_NAME = 'localhost:8000'
-SECRET_KEY = 'insecurekeyfordev'
+SECRET_KEY = os.getenv('SECRET_KEY', None)
 
-# Flask-Mail.
-MAIL_DEFAULT_SENDER = 'contact@local.host'
-MAIL_SERVER = 'smtp.gmail.com'
-MAIL_PORT = 587
-MAIL_USE_TLS = True
-MAIL_USE_SSL = False
-MAIL_USERNAME = 'you@gmail.com'
-MAIL_PASSWORD = 'awesomepassword'
+SERVER_NAME = os.getenv('SERVER_NAME',
+                        'localhost:{0}'.format(os.getenv('DOCKER_WEB_PORT',
+                                                         '8000')))
+
+# SQLAlchemy.
+pg_user = os.getenv('POSTGRES_USER', 'turboquant')
+pg_pass = os.getenv('POSTGRES_PASSWORD', 'password')
+pg_host = os.getenv('POSTGRES_HOST', 'postgres')
+pg_port = os.getenv('POSTGRES_PORT', '5432')
+pg_db = os.getenv('POSTGRES_DB', pg_user)
+db = 'postgresql://{0}:{1}@{2}:{3}/{4}'.format(pg_user, pg_pass,
+                                               pg_host, pg_port, pg_db)
+SQLALCHEMY_DATABASE_URI = db
+SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 # Celery.
-CELERY_BROKER_URL = 'redis://:devpassword@redis:6379/0'
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'redis://redis:6379/0')
 CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
@@ -36,19 +44,31 @@ CELERYBEAT_SCHEDULE = {
     },
 }
 
-# SQLAlchemy.
-db_uri = 'postgresql://turboquant:devpassword@postgres:5432/turboquant'
-SQLALCHEMY_DATABASE_URI = db_uri
-SQLALCHEMY_TRACK_MODIFICATIONS = False
+# Flask-Mail.
+MAIL_SERVER = os.getenv('MAIL_SERVER', 'smtp.gmail.com')
+MAIL_PORT = os.getenv('MAIL_PORT', 587)
+MAIL_USE_TLS = bool(strtobool(os.getenv('MAIL_USE_TLS', 'true')))
+MAIL_USE_SSL = bool(strtobool(os.getenv('MAIL_USE_SSL', 'false')))
+MAIL_USERNAME = os.getenv('MAIL_USERNAME', None)
+MAIL_PASSWORD = os.getenv('MAIL_PASSWORD', None)
+MAIL_DEFAULT_SENDER = os.getenv('MAIL_DEFAULT_SENDER', 'smtp.gmail.com')
+
+# Flask-Babel.
+LANGUAGES = {
+    'en': 'English',
+    'kl': 'Klingon',
+    'es': 'Spanish'
+}
+BABEL_DEFAULT_LOCALE = 'en'
 
 # User.
-SEED_ADMIN_EMAIL = 'dev@local.host'
-SEED_ADMIN_PASSWORD = 'devpassword'
+SEED_ADMIN_EMAIL = os.getenv('SEED_ADMIN_EMAIL', 'dev@local.host')
+SEED_ADMIN_PASSWORD = os.getenv('SEED_ADMIN_PASSWORD', 'password')
 REMEMBER_COOKIE_DURATION = timedelta(days=90)
 
 # Billing.
-STRIPE_PUBLISHABLE_KEY = None
-STRIPE_SECRET_KEY = None
+STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY', None)
+STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY', None)
 STRIPE_API_VERSION = '2018-02-28'
 STRIPE_CURRENCY = 'usd'
 STRIPE_PLANS = {
@@ -116,6 +136,11 @@ DICE_ROLL_PAYOUT = {
     '12': 36.0
 }
 
+# Rate limiting.
 RATELIMIT_STORAGE_URL = CELERY_BROKER_URL
 RATELIMIT_STRATEGY = 'fixed-window-elastic-expiry'
 RATELIMIT_HEADERS_ENABLED = True
+
+# Google Analytics.
+ANALYTICS_GOOGLE_UA = os.getenv('ANALYTICS_GOOGLE_UA', None)
+

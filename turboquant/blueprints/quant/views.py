@@ -71,10 +71,10 @@ def data(page):
 
     print("*** debug", request)
     print("*** debug", request.method)
-    print("*** debug", request.form.viewkeys())
-    print("*** debug", request.form.keys())
-    print("*** debug", 'upload' in request.form.keys())
-    print("*** debug", 'update' in request.form.keys())
+    #print("*** debug", request.form.viewkeys())
+    #print("*** debug", request.form.keys())
+    #print("*** debug", 'upload' in request.form.keys())
+    #print("*** debug", 'update' in request.form.keys())
     
     # Use basic form for CSRF token
     form = Form()
