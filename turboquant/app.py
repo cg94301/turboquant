@@ -146,7 +146,13 @@ def authentication(app, user_model):
 
     @login_manager.user_loader
     def load_user(uid):
-        return user_model.query.get(uid)
+        user = user_model.query.get(uid)
+
+        if not user.is_active():
+            login_manager.login_message = 'This account has been disabled.'
+            return None
+        
+        return user
 
 
 def middleware(app):

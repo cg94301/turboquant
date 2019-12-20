@@ -113,3 +113,7 @@ docker volume rm turboquant_postgres
 
 delete all volumes:
 docker-compose down -v  
+
+**************
+
+Check out GIT fugitive
