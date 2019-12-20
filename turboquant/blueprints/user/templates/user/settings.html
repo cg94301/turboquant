@@ -46,7 +46,7 @@
           subscription</h2>
         <h4 class="text-muted margin-bottom">
           {{ current_user.credit_card.brand }}
-          ****{{ current_user.credit_card.last4 }}
+          {{ current_user.credit_card.last4 }}
           ({{ current_user.credit_card.exp_date.strftime('%m/%Y') }})
         </h4>
 

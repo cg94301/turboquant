@@ -13,31 +13,31 @@
         </legend>
         <div class="form-group">
           <label for="guess"><strong>Guess</strong></label>
-            <select class="form-control" id="guess" name="guess"
-                    title="What number will be rolled?">
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-              <option value="7">7</option>
-              <option value="8">8</option>
-              <option value="9">9</option>
-              <option value="10">10</option>
-              <option value="11">11</option>
-              <option value="12">12</option>
-            </select>
+          <select class="form-control" id="guess" name="guess"
+                  title="What number will be rolled?">
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
         </div>
         <div class="form-group">
           <label for="wager"><strong>Wager</strong></label>
-            <div class="input-group">
-              <div class="input-group-addon">
-                <i class="fa fa-fw fa-database"></i>
-              </div>
-              <input type="number" min="1" class="form-control"
-                     id="wagered" name="wagered"
-                     placeholder="100" title="How many coins do you want to wager?">
+          <div class="input-group">
+            <div class="input-group-addon">
+              <i class="fa fa-fw fa-database"></i>
             </div>
+            <input type="number" min="1" class="form-control"
+                   id="wagered" name="wagered"
+                   placeholder="100" title="How many coins do you want to wager?">
+          </div>
         </div>
         <button type="submit" class="btn btn-primary btn-block sm-margin-top">
           <img src="{{ url_for('static', filename='images/spinner.gif') }}"
@@ -66,11 +66,8 @@
     <div class="col-md-7 col-md-offset-1">
       <div id="recent_bets">
         <h2>Recent bets</h2>
-        {% if recent_bets.count() == 0 %}
-          <p>No bets found.</p>
-        {% else %}
-          <table class="table">
-            <thead>
+        <table class="table">
+          <thead>
             <tr>
               <th>Guess</th>
               <th>Roll</th>
@@ -78,24 +75,28 @@
               <th>Payout</th>
               <th>Net</th>
             </tr>
-            </thead>
-            <tbody>
+          </thead>       
+          {% if recent_bets.count() == 0 %}
+          <tbody>
+          </tbody>
+          {% else %}
+          <tbody>
             {% for bet in recent_bets %}
-              <tr>
-                <td>{{ bet.guess }}</td>
-                <td>{{ bet.roll }}</td>
-                <td class="text-warning">
-                  <i class="fa fa-fw fa-database"></i> {{ bet.wagered }}
-                </td>
-                <td>{{ bet.payout }}x</td>
-                <td class="text-{{ 'success' if bet.net > 0 else 'danger' }}">
-                  <i class="fa fa-fw fa-database"></i> {{ bet.net }}
-                </td>
-              </tr>
+            <tr>
+              <td>{{ bet.guess }}</td>
+              <td>{{ bet.roll }}</td>
+              <td class="text-warning">
+                <i class="fa fa-fw fa-database"></i> {{ bet.wagered }}
+              </td>
+              <td>{{ bet.payout }}x</td>
+              <td class="text-{{ 'success' if bet.net > 0 else 'danger' }}">
+                <i class="fa fa-fw fa-database"></i> {{ bet.net }}
+              </td>
+            </tr>
             {% endfor %}
-            </tbody>
-          </table>
-        {% endif %}
+          </tbody>
+          {% endif %}
+        </table>
         <a href="{{ url_for('bet.history') }}">
           <span class="btn btn-sm btn-default">View full betting history</span>
         </a>

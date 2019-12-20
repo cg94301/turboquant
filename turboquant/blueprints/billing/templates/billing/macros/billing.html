@@ -194,7 +194,7 @@
             </time>
           </td>
           <td class="small">
-            {{ invoice.brand }} ****{{ invoice.last4 }}
+            {{ invoice.brand }} {{ invoice.last4 }}
           </td>
           <td class="small">{{ invoice.description }}</td>
           <td>
@@ -247,7 +247,7 @@
   <div class="form-group">
     <label for=""><strong>Card number</strong></label>
     <input data-stripe="number" class="form-control"
-           value="{{ '****' + card_last4 if card_last4 }}"/>
+           value="{{ card_last4 if card_last4 }}"/>
   </div>
 
   <div class="row">

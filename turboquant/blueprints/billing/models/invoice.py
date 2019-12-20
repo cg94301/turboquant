@@ -34,7 +34,7 @@ class Invoice(ResourceMixin, db.Model):
     currency = db.Column(db.String(8))
     tax = db.Column(db.Integer())
     tax_percent = db.Column(db.Float())
-    total = db.Column(db.Integer())
+    total = db.Column(db.String(4))
 
     # De-normalize the card details so we can render a user's history properly
     # even if they have no active subscription or changed cards at some point.

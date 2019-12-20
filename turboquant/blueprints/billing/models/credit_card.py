@@ -21,7 +21,7 @@ class CreditCard(ResourceMixin, db.Model):
 
     # Card details.
     brand = db.Column(db.String(32))
-    last4 = db.Column(db.Integer)
+    last4 = db.Column(db.String(4))
     exp_date = db.Column(db.Date, index=True)
     is_expiring = db.Column(db.Boolean(), nullable=False, server_default='0')
 

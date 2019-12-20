@@ -179,7 +179,7 @@ def update_payment_method():
         return redirect(url_for('user.settings'))
 
     return render_template('billing/payment_method.html', form=form,
-                           plan=active_plan, card_last4=str(card.last4))
+                           plan=active_plan, card_last4=card.last4)
 
 
 @billing.route('/billing_details', defaults={'page': 1})

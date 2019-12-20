@@ -102,7 +102,7 @@
             <dd class="sm-margin-bottom">
               {{ user.name }}<br/>
               {{ user.credit_card.brand }}
-              ****{{ user.credit_card.last4 }}
+              {{ user.credit_card.last4 }}
               ({{ user.credit_card.exp_date.strftime('%m/%Y') }})
             </dd>
             {% call f.form_tag('admin.users_cancel_subscription') %}

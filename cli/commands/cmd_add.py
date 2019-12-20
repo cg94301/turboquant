@@ -193,7 +193,7 @@ def invoices():
                 'tax_percent': random.random() * 10,
                 'total': random.random() * 1000,
                 'brand': random.choice(cards),
-                'last4': random.randint(1000, 9000),
+                'last4': str(random.randint(1000, 9000)),
                 'exp_date': exp_date
             }
 
