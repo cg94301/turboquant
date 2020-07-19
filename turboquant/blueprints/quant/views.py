@@ -468,9 +468,9 @@ def portfolio():
             print("debug. retrieve continues.")
             
             try:
-                return send_file('/tmp/turboquant.1.py', as_attachment=True, attachment_filename='turboquant.py')
+                return send_file('/tmp/turboquant.' + str(uid) + '.py', as_attachment=True, attachment_filename='turboquant.py')
             except:
-                print("Oops! ",sys.exc_info())
+                print("Oops3! ",sys.exc_info())
 
 
         if 'compile' in request.form:
@@ -523,7 +523,7 @@ def portfolio():
     
             response = sfn.start_execution(
                 stateMachineArn='arn:aws:states:us-west-2:188444798703:stateMachine:tqmake',
-                input=payloadb
+                input=payload
                 #name=sfnid
             )
 
@@ -709,8 +709,8 @@ def retrieve():
 
     
     try:
-        return send_file('/tmp/turboquant.1.py')
+        return send_file('/tmp/turboquant.' + str(uid) + '.py')
     except:
-        print("Oops! ",sys.exc_info())
+        print("Oops2! ",sys.exc_info())
         
     #return redirect(url_for('quant.portfolio'))

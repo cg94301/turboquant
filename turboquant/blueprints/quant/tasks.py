@@ -7,6 +7,7 @@ from turboquant.blueprints.quant.models import Strategy, Ticker
 from sqlalchemy import and_
 import itertools
 import random
+import sys
 
 celery = create_celery_app()
 
@@ -109,7 +110,7 @@ def launch_batch_job(uid,params):
 
     # seed can be reused for debug purposes
     rs = response['Payload']
-    rseed = rs.read()
+    rseed = int(rs.read())
     print("rseed:", rseed)
 
     # Step 2:
@@ -165,6 +166,7 @@ def launch_batch_job(uid,params):
     # Give every job an identifier.
     comb_id = [ (get_jobid(uid,10),) + job for job in comb ]
     print("Running the following jobs:")
+    print(type(comb_id))
     print(comb_id)
 
     # This is how jobs look like. List of tuples.
@@ -184,40 +186,49 @@ def launch_batch_job(uid,params):
     
     client = boto3.client('stepfunctions', region_name='us-west-2')
     params = {"batch": {"uid": uid, "jobs":comb_id, "batch_size":batch_size, "active":[], "all_done": False, "any_done": False, "wait_time": wait_time, "seed": rseed}}
+    print("*** debug params", params)
     payload = json.dumps(params)
     payloadb = str.encode(payload)
 
-    try:
-        response = client.start_execution(
-            stateMachineArn='arn:aws:states:us-west-2:188444798703:stateMachine:tqbatch',
-            input=payloadb,
-            name=sfnid
-        )
+    #try:
+    response = client.start_execution(
+        stateMachineArn='arn:aws:states:us-west-2:188444798703:stateMachine:tqbatch',
+        input=payload,
+        name=sfnid
+    )
 
-        print("launched tqbatch:", response['executionArn'])
-        # write to DB. pending jobs.
-        # this does not use session. instead uses class method.
-        jobs = []
+    #print("launched tqbatch:", response['executionArn'])
+    print("launched tqbatch attempt:", response)
+    
+    if 'Payload' in response.keys():
+        # read response of type streamingbody
+        pl = response['Payload']
+        pltxt = pl.read()
+        print("tqbatch:", pltxt)
+    
+    # write to DB. pending jobs.
+    # this does not use session. instead uses class method.
+    jobs = []
 
-        for job in comb_id:
-            s = Strategy()
-            s.user_id = uid
-            s.name = job[0]
-            s.ticker = job[1]
-            ##s.startdate = response['startDate']
-            #s.execution_arn = response['executionArn']
-            s.status = 'PENDING'
-            s.save()        
-            
-            # bulk save needs Session?
-            #s = Session()
-            #jobs = [ Strategy(user_id=uid, name=job[0], ticker=job[1], status='PENDING') for job in comb_id]               
-            #s.bulk_save_objects(jobs)
-            #s.commit()
-            
-            # launched w/ delay. no return value.
-    except:
-        print("Launch failed!")
+    for job in comb_id:
+        s = Strategy()
+        s.user_id = uid
+        s.name = job[0]
+        s.ticker = job[1]
+        ##s.startdate = response['startDate']
+        #s.execution_arn = response['executionArn']
+        s.status = 'PENDING'
+        s.save()        
+        
+        # bulk save needs Session?
+        #s = Session()
+        #jobs = [ Strategy(user_id=uid, name=job[0], ticker=job[1], status='PENDING') for job in comb_id]               
+        #s.bulk_save_objects(jobs)
+        #s.commit()
+        
+        # launched w/ delay. no return value.
+    #except:
+    #    print("Launch failed!", sys.exc_info()[0])
     
     return None
 
