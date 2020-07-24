@@ -275,10 +275,10 @@ def strategies_bulk_delete():
         if 'delete' in request.form:
             print("Deleting IDS:", ids)
 
-        flash('{0} strategies were scheduled to be deleted.'.format(len(ids)),
+        flash('{0} strategies were added/removed from portfolio.'.format(len(ids)),
               'success')
     else:
-        flash('No strategies were deleted, something went wrong.', 'error')
+        flash('No strategies were added/removed from portfolio.', 'error')
 
     return redirect(url_for('quant.strategies'))
 
