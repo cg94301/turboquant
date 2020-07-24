@@ -27,4 +27,5 @@ RUN pip install --editable .
 EXPOSE 8000
 
 CMD ["gunicorn", "-c", "python:config.gunicorn", "turboquant.app:create_app()"]
+# CMD ["gunicorn", "--workers", "3", "--bind", "unix:app.sock", "-m", "007", "turboquant.app:create_app()"]
 
