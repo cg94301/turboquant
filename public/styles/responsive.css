@@ -20,7 +20,7 @@ File: Responsive
     overflow-x: hidden;
   }
 }
-@media (max-width: 767px) {
+/* @media (max-width: 767px) {
   body {
     overflow-x: hidden;
   }
@@ -106,8 +106,8 @@ File: Responsive
   div#datatable-buttons_info {
     float: none;
   }
-}
-@media (max-width: 480px) {
+} */
+/* @media (max-width: 480px) {
   .side-menu {
     z-index: 10 !important;
   }
@@ -117,14 +117,14 @@ File: Responsive
   .search-bar {
     display: none !important;
   }
-}
-@media (max-width: 420px) {
+} */
+/* @media (max-width: 420px) {
   .hide-phone {
     display: none !important;
   }
-}
+} */
 /* Container-alt */
-@media (min-width: 768px) {
+/* @media (min-width: 768px) {
   .container-alt {
     width: 750px;
   }
@@ -133,7 +133,7 @@ File: Responsive
   .nav-tabs.nav-justified > .active > a:hover {
     border-bottom-color: #f5f5f5;
   }
-}
+} */
 @media (min-width: 992px) {
   .container-alt {
     width: 970px;
@@ -144,7 +144,7 @@ File: Responsive
     width: 1170px;
   }
 }
-@media (max-width: 419px) {
+/* @media (max-width: 419px) {
   .topbar-left {
     width: 70px !important;
   }
@@ -164,3 +164,4 @@ File: Responsive
     margin-bottom: 10px;
   }
 }
+*/
