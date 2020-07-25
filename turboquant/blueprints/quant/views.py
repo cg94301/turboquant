@@ -316,6 +316,11 @@ def generate():
                   "max_depth_from": max_depth_from, "max_depth_to": max_depth_to,
                   "eta_from": eta_from, "eta_to": eta_to}        
 
+        # hardcode these values to prevent of massive launch of jobs
+        params = {"num_round_from": 400, "num_round_to": 400, "num_round_step": 100,
+                  "max_depth_from": 3, "max_depth_to": 3,
+                  "eta_from": 0.1, "eta_to": 0.1}        
+        
         # do combinatorics here. take ticker from DB not cloud. the launch sfn with list of jobs.
         # move preprocess into data step.
         
