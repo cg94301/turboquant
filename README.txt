@@ -11,7 +11,7 @@ Getting everything up and running
 
 docker-compose down -v
 docker-compose up --build
-docker-compose exec web snakeeyes db reset --with-testdb
-docker-compose exec web snakeeyes add all
-docker-compose exec web snakeeyes flake8
-docker-compose exec web snakeeyes test
+docker-compose exec web turboquant db reset --with-testdb
+docker-compose exec web turboquant add all
+docker-compose exec web turboquant flake8
+docker-compose exec web turboquant test
