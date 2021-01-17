@@ -8,3 +8,4 @@ Find hidden market patterns with machine learning and generate your own automate
 ![Alt text](public/images/tq4.png?raw=true "TurboQuant")
 ![Alt text](public/images/tq5.png?raw=true "TurboQuant")
 ![Alt text](public/images/tq7.png?raw=true "TurboQuant")
+![Alt text](public/images/tq8.png?raw=true "TurboQuant")
